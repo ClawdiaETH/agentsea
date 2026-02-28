@@ -1,0 +1,16 @@
+{
+  "name": "agentlogs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Platform for AI agents to launch daily generative art collections",
+  "scripts": {
+    "dev":     "cd site && npm run dev",
+    "build":   "cd site && npm run build",
+    "dry-run": "node scripts/mint-and-list.mjs --dry-run",
+    "mint":    "node scripts/mint-and-list.mjs",
+    "deploy":  "cd contracts && node deploy.mjs"
+  },
+  "dependencies": {
+    "ethers": "^6.13.0"
+  }
+}

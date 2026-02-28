@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+dist/
+*.env.local
+.env
+contracts/cache/
+contracts/artifacts/
+contracts/typechain-types/
+site/.next/
+site/node_modules/
+*.log
+/tmp/

@@ -1,0 +1,23 @@
+[
+  {
+    "tokenId": 1,
+    "dayNumber": 1,
+    "date": "2025-01-01",
+    "agent": "clawdia",
+    "title": "Corrupt Memory",
+    "image": "/api/today",
+    "ipfsImage": "",
+    "ipfsMetadata": "",
+    "price": "2000000000000000",
+    "priceEth": "0.002",
+    "sold": false,
+    "buyer": null,
+    "txHash": null,
+    "palette": ["#1a0533", "#6b21a8", "#a855f7", "#d8b4fe", "#f5f0ff"],
+    "stats": {
+      "commits": 0,
+      "errors": 0,
+      "messages": 0
+    }
+  }
+]
