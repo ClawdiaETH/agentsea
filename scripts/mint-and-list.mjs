@@ -42,6 +42,113 @@ const COLLECTION_ABI = [
   'function getPrice(uint256 dayNumber) external view returns (uint256)',
 ];
 
+// ─── Palette System ─────────────────────────────────────────────────────────
+// 12 data-driven palettes, checked in priority order.
+// Each palette has HSL ranges for 5 roles: DOM, SEC, ACC, BLK, WHT.
+// Seed-based sampling ensures deterministic colors per day.
+
+const PALETTES = {
+  INCIDENT:     { label: 'Incident',     dom: [0,15,70,90,40,55],     sec: [20,35,60,80,35,50],    acc: [40,55,80,95,55,70],    blk: [0,10,30,50,3,14],      wht: [0,15,10,25,88,97] },
+  GRAVEYARD:    { label: 'Graveyard',    dom: [230,260,30,50,20,35],  sec: [260,280,25,45,25,40],  acc: [180,210,30,50,40,55],  blk: [240,260,20,40,3,14],   wht: [220,240,5,15,88,97] },
+  SUNRISE:      { label: 'Sunrise',      dom: [15,35,75,95,50,65],    sec: [330,350,60,80,45,60],  acc: [45,60,85,100,55,70],   blk: [15,25,30,50,3,14],     wht: [30,50,8,20,88,97] },
+  DEFI:         { label: 'DeFi Day',     dom: [155,170,60,80,35,50],  sec: [140,160,50,70,45,60],  acc: [160,175,55,75,55,70],  blk: [155,170,30,50,3,14],   wht: [150,170,5,15,88,97] },
+  HYPERSOCIAL:  { label: 'Hypersocial',  dom: [325,345,65,85,40,55],  sec: [335,355,55,75,50,65],  acc: [340,360,60,80,60,75],  blk: [330,345,30,50,3,14],   wht: [330,350,8,20,88,97] },
+  TWILIGHT:     { label: 'Twilight',     dom: [265,285,55,75,30,45],  sec: [270,290,50,70,40,55],  acc: [255,275,45,65,55,70],  blk: [270,285,25,45,3,14],   wht: [265,280,5,15,88,97] },
+  MERIDIAN:     { label: 'Meridian',     dom: [215,235,55,75,45,60],  sec: [220,240,50,70,50,65],  acc: [210,230,50,70,60,75],  blk: [220,235,25,45,3,14],   wht: [215,230,5,15,88,97] },
+  GOLDEN_HOUR:  { label: 'Golden Hour',  dom: [35,50,70,90,45,60],    sec: [40,55,65,85,50,65],    acc: [45,60,75,95,60,75],    blk: [35,50,30,50,3,14],     wht: [35,55,8,20,88,97] },
+  BANKR:        { label: 'Bankr Mode',   dom: [160,175,55,75,30,45],  sec: [155,170,50,70,45,60],  acc: [150,170,50,70,55,70],  blk: [160,175,25,45,3,14],   wht: [155,170,5,15,88,97] },
+  FARCASTER:    { label: 'Farcaster',    dom: [265,280,60,80,35,50],  sec: [270,285,55,75,45,60],  acc: [260,280,45,65,60,75],  blk: [265,280,25,45,3,14],   wht: [260,280,5,15,88,97] },
+  DORMANT:      { label: 'Dormant',      dom: [210,230,5,15,40,55],   sec: [210,230,5,15,55,65],   acc: [210,230,5,15,70,80],   blk: [0,0,0,5,6,12],         wht: [210,230,3,10,90,96] },
+  SURGE:        { label: 'Surge',        dom: [185,200,70,90,45,60],  sec: [180,200,65,85,55,70],  acc: [175,200,60,80,65,80],  blk: [185,200,30,50,3,14],   wht: [180,200,5,15,88,97] },
+};
+
+// Mulberry32 — fast seeded 32-bit PRNG
+function mulberry32(seed) {
+  let s = seed | 0;
+  return function () {
+    s = (s + 0x6d2b79f5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 0x100000000;
+  };
+}
+
+function hslToHex(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  s /= 100; l /= 100;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function sampleRole(rng, range) {
+  const [hMin, hMax, sMin, sMax, lMin, lMax] = range;
+  const h = hMin + rng() * (hMax - hMin);
+  const s = sMin + rng() * (sMax - sMin);
+  const l = lMin + rng() * (lMax - lMin);
+  return hslToHex(h, s, l);
+}
+
+function computeGlitchIndex(stats) {
+  const errors   = stats.errors   ?? 0;
+  const txns     = stats.txns     ?? 0;
+  const messages = stats.messages ?? 0;
+  return Math.min(100, Math.max(0, (errors * 3) + (txns / 10) + (messages / 100)));
+}
+
+/**
+ * Select palette by priority chain. Returns { id, label, colors: string[5] }.
+ * Colors are seeded by dayNumber so the same day always gets the same palette colors.
+ */
+function selectPalette(dayLog) {
+  const stats = {
+    errors:     dayLog.errors   ?? dayLog.operational?.errors   ?? 0,
+    txns:       dayLog.txns     ?? dayLog.operational?.txns     ?? 0,
+    posts:      dayLog.posts    ?? dayLog.operational?.posts    ?? 0,
+    messages:   dayLog.messages ?? dayLog.operational?.messages ?? 0,
+    peakHour:   dayLog.peakHour ?? dayLog.operational?.peakHour ?? 12,
+    glitchIndex: dayLog.glitchIndex ?? dayLog.operational?.glitchIndex
+                 ?? computeGlitchIndex(dayLog),
+  };
+
+  // Priority chain — first match wins
+  let id;
+  if      (stats.errors >= 100)                                   id = 'INCIDENT';
+  else if (stats.peakHour >= 0  && stats.peakHour < 6)            id = 'GRAVEYARD';
+  else if (stats.peakHour >= 6  && stats.peakHour < 10)           id = 'SUNRISE';
+  else if (stats.txns > 350 && stats.posts < 60)                  id = 'DEFI';
+  else if (stats.posts > 100)                                     id = 'HYPERSOCIAL';
+  else if (stats.peakHour >= 19 && stats.peakHour < 24)           id = 'TWILIGHT';
+  else if (stats.peakHour >= 10 && stats.peakHour < 15)           id = 'MERIDIAN';
+  else if (stats.peakHour >= 15 && stats.peakHour < 19)           id = 'GOLDEN_HOUR';
+  else if (stats.txns > 0 && stats.posts > 0
+           && stats.txns / stats.posts > 6)                       id = 'BANKR';
+  else if (stats.txns > 0 && stats.posts > 0
+           && stats.posts / stats.txns > 1.5)                     id = 'FARCASTER';
+  else if (stats.txns < 120 && stats.posts < 35)                  id = 'DORMANT';
+  else if (stats.glitchIndex >= 85)                                id = 'SURGE';
+  else                                                             id = 'MERIDIAN';
+
+  const pal = PALETTES[id];
+  const seed = (dayLog.dayNumber * 0x9e3779b9) % 0x100000000;
+  const rng = mulberry32(seed);
+
+  // Sample 5 role colors: [BLK, DOM, SEC, ACC, WHT]
+  const colors = [
+    sampleRole(rng, pal.blk),
+    sampleRole(rng, pal.dom),
+    sampleRole(rng, pal.sec),
+    sampleRole(rng, pal.acc),
+    sampleRole(rng, pal.wht),
+  ];
+
+  return { id, label: pal.label, colors };
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function log(msg) {
@@ -90,9 +197,16 @@ async function assembleDayLog(config, dayNumber) {
       commits:  0,
       errors:   0,
       messages: 0,
-      trades:   0,
-      palette:  ['#1a0533', '#6b21a8', '#a855f7', '#d8b4fe', '#f5f0ff'],
+      txns:     0,
+      posts:    0,
+      peakHour: new Date().getUTCHours(),
     };
+    // Auto-select palette from stats
+    const { id, label, colors } = selectPalette(stub);
+    stub.paletteId = id;
+    stub.paletteLabel = label;
+    stub.palette = colors;
+    log(`  Palette: ${label} (${id})`);
     fs.writeFileSync('/tmp/daylog.json', JSON.stringify(stub, null, 2));
     return stub;
   }
@@ -100,7 +214,18 @@ async function assembleDayLog(config, dayNumber) {
   // assembler takes [YYYY-MM-DD] [--out path]
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
   await exec(`node ${assemblerPath} ${yesterday} --out /tmp/daylog.json`);
-  return JSON.parse(fs.readFileSync('/tmp/daylog.json', 'utf8'));
+  const dayLog = JSON.parse(fs.readFileSync('/tmp/daylog.json', 'utf8'));
+
+  // Auto-select palette if assembler didn't provide one
+  if (!dayLog.paletteId) {
+    const { id, label, colors } = selectPalette(dayLog);
+    dayLog.paletteId = id;
+    dayLog.paletteLabel = label;
+    dayLog.palette = colors;
+    log(`  Palette: ${label} (${id})`);
+  }
+
+  return dayLog;
 }
 
 // ─── Step 2: Render image ─────────────────────────────────────────────────────
@@ -169,12 +294,18 @@ async function uploadMetadataToIPFS(dayLog, imageUri, config) {
     image:       imageUri,
     external_url: `https://agentlogs.xyz/${config.agentSlug}`,
     attributes:  [
-      { trait_type: 'Agent',      value: config.agentSlug     },
-      { trait_type: 'Day',        value: dayLog.dayNumber      },
-      { trait_type: 'Date',       value: dayLog.date           },
-      { trait_type: 'Commits',    value: dayLog.commits ?? 0   },
-      { trait_type: 'Errors',     value: dayLog.errors  ?? 0   },
-      { trait_type: 'Messages',   value: dayLog.messages ?? 0  },
+      { trait_type: 'Agent',      value: config.agentSlug              },
+      { trait_type: 'Day',        value: dayLog.dayNumber               },
+      { trait_type: 'Date',       value: dayLog.date                    },
+      { trait_type: 'Palette',    value: dayLog.paletteLabel ?? 'Meridian' },
+      { trait_type: 'Palette ID', value: dayLog.paletteId   ?? 'MERIDIAN' },
+      { trait_type: 'Commits',    value: dayLog.commits  ?? 0          },
+      { trait_type: 'Errors',     value: dayLog.errors   ?? 0          },
+      { trait_type: 'Messages',   value: dayLog.messages ?? 0          },
+      { trait_type: 'Txns',       value: dayLog.txns     ?? 0          },
+      { trait_type: 'Posts',      value: dayLog.posts    ?? 0          },
+      { trait_type: 'Peak Hour UTC', value: `${String(dayLog.peakHour ?? 12).padStart(2, '0')}:00` },
+      { trait_type: 'Glitch Index',  value: Math.round(computeGlitchIndex(dayLog)) },
     ],
   };
 
@@ -260,11 +391,15 @@ function updateRegistry(config, dayLog, tokenId, imageUri, metadataUri, mintTxHa
     sold:         false,
     buyer:        null,
     txHash:       mintTxHash,
-    palette:      dayLog.palette ?? ['#1a0533', '#6b21a8', '#a855f7', '#d8b4fe', '#f5f0ff'],
+    paletteId:    dayLog.paletteId    ?? 'MERIDIAN',
+    paletteLabel: dayLog.paletteLabel ?? 'Meridian',
+    palette:      dayLog.palette      ?? ['#1a0533', '#6b21a8', '#a855f7', '#d8b4fe', '#f5f0ff'],
     stats: {
       commits:  dayLog.commits  ?? 0,
       errors:   dayLog.errors   ?? 0,
       messages: dayLog.messages ?? 0,
+      txns:     dayLog.txns     ?? 0,
+      posts:    dayLog.posts    ?? 0,
     },
   };
 
@@ -290,7 +425,12 @@ async function main() {
   const imgPath = await renderImage(dayLog);
 
   if (DRY_RUN) {
-    log('\n✅ Dry run complete. Image at /tmp/piece.png. Day log at /tmp/daylog.json.');
+    log(`\n✅ Dry run complete.`);
+    log(`   Day:     ${dayNumber}`);
+    log(`   Palette: ${dayLog.paletteLabel} (${dayLog.paletteId})`);
+    log(`   Colors:  ${dayLog.palette.join(' ')}`);
+    log(`   Image:   /tmp/piece.png`);
+    log(`   DayLog:  /tmp/daylog.json`);
     log('   Re-run without --dry-run to mint and list on-chain.');
     return;
   }
