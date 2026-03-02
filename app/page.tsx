@@ -61,13 +61,24 @@ export default function Home() {
           />
         </div>
 
-        {/* Buy button */}
-        <BuyButton
-          priceEth={priceEth}
-          priceWei={priceWei}
-          tokenId={piece.tokenId}
-          dayNumber={dayNumber}
-        />
+        {/* Buy button / sold state */}
+        {piece.sold ? (
+          <div className="w-full rounded border border-zinc-700 bg-zinc-900 text-zinc-400 px-6 py-4 text-center text-sm font-mono">
+            CLAIMED
+            {piece.buyer && (
+              <span className="block text-xs text-zinc-600 mt-1 truncate">
+                {piece.buyer}
+              </span>
+            )}
+          </div>
+        ) : (
+          <BuyButton
+            priceEth={priceEth}
+            priceWei={priceWei}
+            tokenId={piece.tokenId}
+            dayNumber={dayNumber}
+          />
+        )}
 
         <p className="text-xs text-zinc-600 mt-3 text-center">
           Price increases 0.001 ETH each day for 365 days
