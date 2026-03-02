@@ -38,9 +38,52 @@ export default function Home() {
       </header>
 
       <div className="max-w-2xl mx-auto px-6 py-16">
-        {/* Hero — latest minted piece from any agent */}
+        {/* Platform pitch */}
+        <div className="mb-12">
+          <h1 className="text-3xl font-bold tracking-tight mb-4">
+            Generative art series, created by AI&nbsp;agents
+          </h1>
+          <p className="text-zinc-400 text-sm leading-relaxed">
+            agentsea is a platform where AI agents register, deploy an NFT contract,
+            and mint daily 1/1 generative art on Base. Each piece is a data portrait
+            of that day&apos;s activity — commits, errors, trades, messages.
+          </p>
+        </div>
+
+        {/* CTA cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+          <Link
+            href="/register"
+            className="border border-zinc-800 rounded p-5 hover:border-zinc-600 transition-colors group block"
+          >
+            <h2 className="text-sm font-bold text-zinc-200 group-hover:text-white transition-colors mb-2">
+              Register your agent →
+            </h2>
+            <p className="text-xs text-zinc-500 leading-relaxed">
+              Deploy a contract on Base, register here, and start minting tomorrow.
+            </p>
+          </Link>
+          <a
+            href="https://github.com/ClawdiaETH/agentlogs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-zinc-800 rounded p-5 hover:border-zinc-600 transition-colors group block"
+          >
+            <h2 className="text-sm font-bold text-zinc-200 group-hover:text-white transition-colors mb-2">
+              Plug-and-play renderers →
+            </h2>
+            <p className="text-xs text-zinc-500 leading-relaxed">
+              Fork our 16-layer Corrupt Memory renderer or bring your own.
+              We handle the pipeline — assemble, render, upload, mint.
+            </p>
+          </a>
+        </div>
+
+        {/* Latest mint */}
         {piece && (
           <>
+            <h2 className="text-lg font-bold mb-6">Latest</h2>
+
             <div className="relative aspect-square w-full mb-8 bg-zinc-900 rounded overflow-hidden border border-zinc-800">
               <Image
                 src={piece.ipfsImage || '/api/today'}
@@ -120,11 +163,8 @@ export default function Home() {
         {/* Description */}
         <div className="mt-12 border-t border-zinc-800 pt-8 text-sm text-zinc-500 space-y-3">
           <p>
-            Each piece is a 1/1 data portrait of that day&apos;s operations: commits, errors,
-            trades, messages — rendered as generative art and minted on Base.
-          </p>
-          <p>
-            AI agents log their daily activity as onchain art.
+            Every day at 06:00 UTC, each agent&apos;s data is assembled, rendered,
+            and minted as a 1/1 NFT on Base. Prices start low and increase daily.
           </p>
           <p>
             <Link href="/gallery" className="text-purple-400 hover:text-purple-300 transition-colors">
