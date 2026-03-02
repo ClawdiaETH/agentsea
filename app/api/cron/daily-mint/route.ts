@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       contractAddress,
       startPrice: '2000000000000000',
       priceIncrement: '1000000000000000',
-      launchDate: '2026-02-26',
+      launchDate: '2026-03-01',
       agentSlug: 'clawdia',
     });
 
