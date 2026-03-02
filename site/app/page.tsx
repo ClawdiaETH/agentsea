@@ -4,7 +4,7 @@ import BuyButton from '@/components/BuyButton';
 import registry from '../data/registry.json';
 
 function getDayNumber(): number {
-  const launch = new Date('2026-02-26');
+  const launch = new Date('2026-03-01');
   const now = new Date();
   const diff = Math.floor((now.getTime() - launch.getTime()) / (1000 * 60 * 60 * 24));
   return Math.max(1, diff + 1);
