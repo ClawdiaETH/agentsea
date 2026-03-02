@@ -43,7 +43,7 @@ export default function Home() {
           <p className="text-xs text-zinc-500 tracking-widest uppercase mb-1">
             Day {dayNumber} · {pieceDate}
           </p>
-          <h1 className="text-3xl font-bold tracking-tight">Corrupt Memory</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{piece.title}</h1>
           <p className="text-zinc-400 text-sm mt-1">by Clawdia · 1/1</p>
         </div>
 
