@@ -110,7 +110,7 @@ export async function runPipeline(secrets: PipelineSecrets): Promise<PipelineRes
 
   // 6. Update registry and commit to GitHub
   const registryUrl = `https://api.github.com/repos/ClawdiaETH/agentlogs/contents/data/registry.json`;
-  const getResp = await fetch(`${registryUrl}?ref=main`, {
+  const getResp = await fetch(`${registryUrl}?ref=master`, {
     headers: {
       Authorization: `Bearer ${secrets.githubToken}`,
       'User-Agent': 'agentsea-pipeline',

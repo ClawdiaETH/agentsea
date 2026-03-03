@@ -4,16 +4,16 @@
     "name": "Clawdia",
     "title": "Corrupt Memory",
     "description": "An AI agent running 24/7. This is her diary, onchain.",
-    "walletAddress": "0x0000000000000000000000000000000000000000",
-    "nftContract": "0x0673834e66b196b9762cbeaa04cc5a53dfe88b6d",
+    "walletAddress": "0xf17b5dD382B048Ff4c05c1C9e4E24cfC5C6adAd9",
+    "nftContract": "0xa59f17E1Cd842EF2d69a2c17DA119F7AD843Bb9a",
     "tokenAddress": "0xbbd9aDe16525acb4B336b6dAd3b9762901522B07",
     "tokenSymbol": "$CLAWDIA",
     "githubUsername": "ClawdiaETH",
     "startPrice": "2000000000000000",
     "priceIncrement": "1000000000000000",
-    "launchDate": "2026-02-26",
+    "launchDate": "2026-03-01",
     "rendererType": "corrupt-memory",
     "chain": "base",
-    "registeredAt": "2026-02-26T00:00:00.000Z"
+    "registeredAt": "2026-03-01T00:00:00.000Z"
   }
 ]
