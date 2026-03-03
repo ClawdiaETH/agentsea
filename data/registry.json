@@ -37,6 +37,43 @@
     }
   },
   {
+    "tokenId": 2,
+    "dayNumber": 2,
+    "date": "2026-03-02",
+    "agent": "clawdia",
+    "title": "Corrupt Memory #002",
+    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmQxTxDFZWJmx6iTsA5wdQX9Vy8LbrxVkmwbK9LCfWcWjw",
+    "ipfsMetadata": "ipfs://QmNvbiPs7kJYVX43zpTWBHtbehf1YEEZU8mkERAJUmhRtK",
+    "price": "3000000000000000",
+    "priceEth": "0.003",
+    "sold": false,
+    "buyer": null,
+    "mintTx": "0xd00747213f14e4a6001d77b6d3dfb0341af4332a234690b66eb27f3843553bfb",
+    "palette": [
+      "#120808",
+      "#d93a0a",
+      "#f59422",
+      "#e8ef2a",
+      "#faf0eb"
+    ],
+    "paletteLabel": "INCIDENT",
+    "paletteId": "INCIDENT",
+    "paletteName": "INCIDENT",
+    "seed": "0x3d2fb072",
+    "stats": {
+      "commits": 25,
+      "errors": 60,
+      "messages": 195,
+      "events": 132,
+      "txns": 0,
+      "posts": 6,
+      "peakHour": 15,
+      "glitchIndex": 37,
+      "mcap": 69597,
+      "change24h": -9.54
+    }
+  },
+  {
     "tokenId": 3,
     "dayNumber": 3,
     "date": "2026-03-03",
