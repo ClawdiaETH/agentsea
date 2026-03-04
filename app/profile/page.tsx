@@ -7,7 +7,7 @@ import PieceCard from '@/components/PieceCard';
 import registry from '../../data/registry.json';
 import collections from '../../data/collections.json';
 
-const BASE_RPC = 'https://mainnet.base.org';
+const BASE_RPC = process.env.NEXT_PUBLIC_BASE_RPC || 'https://mainnet.base.org';
 // balanceOf(address) selector
 const BALANCE_OF_SELECTOR = '0x70a08231';
 

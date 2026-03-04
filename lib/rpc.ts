@@ -1,4 +1,4 @@
-const BASE_RPC = 'https://mainnet.base.org';
+const BASE_RPC = process.env.NEXT_PUBLIC_BASE_RPC || 'https://mainnet.base.org';
 const inFlightCalls = new Map<string, Promise<string>>();
 
 export async function rpcCall(contract: string, data: string): Promise<string> {

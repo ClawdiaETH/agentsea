@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { rpcCall } from '@/lib/rpc';
 
 const PAGE_SIZE = 12;
-const BATCH_SIZE = 3;
+const BATCH_SIZE = 6;
 
 async function resolveTokenURI(hex: string): Promise<{ name: string; image: string } | null> {
   if (!hex || hex === '0x') return null;
