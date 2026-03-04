@@ -87,7 +87,7 @@ export async function POST(request: Request) {
   agents.push(entry);
   saveAgentsRegistry(agents);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://agentsea.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://agentsea.io';
 
   return NextResponse.json({
     ok:         true,

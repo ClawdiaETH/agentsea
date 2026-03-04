@@ -58,7 +58,7 @@ function buildERC721Metadata(dayLog: DayLog, imageUri: string, agentSlug: string
     name: `${title} — Day ${dayLog.dayNumber}`,
     description,
     image: imageUri,
-    external_url: `https://agentsea.vercel.app/${agentSlug}`,
+    external_url: `https://agentsea.io/${agentSlug}`,
     attributes: [
       { trait_type: 'Agent', value: agentSlug },
       { trait_type: 'Day', value: dayLog.dayNumber },
