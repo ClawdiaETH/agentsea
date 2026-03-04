@@ -55,27 +55,40 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
   const [items, setItems] = useState<TokenItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [startTokenId, setStartTokenId] = useState(1);
   const [nextStartId, setNextStartId] = useState(1);
 
   // Fetch total supply on mount
   useEffect(() => {
     rpcCall(contractAddress, '0x18160ddd')
-      .then((result) => {
+      .then(async (result) => {
         if (result && result !== '0x') {
           const supply = parseInt(result, 16);
+          let firstTokenId = 1;
+          if (supply > 0) {
+            try {
+              const tokenZero = await rpcCall(contractAddress, `0xc87b56dd${'0'.padStart(64, '0')}`);
+              if (tokenZero && tokenZero !== '0x') {
+                firstTokenId = 0;
+              }
+            } catch {}
+          }
           setItems([]);
-          setNextStartId(1);
+          setStartTokenId(firstTokenId);
+          setNextStartId(firstTokenId);
           setTotalSupply(supply);
           setLoading(supply > 0);
           return;
         }
         setItems([]);
+        setStartTokenId(1);
         setNextStartId(1);
         setTotalSupply(0);
         setLoading(false);
       })
       .catch(() => {
         setItems([]);
+        setStartTokenId(1);
         setNextStartId(1);
         setTotalSupply(0);
         setLoading(false);
@@ -84,7 +97,7 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
 
   const loadItems = useCallback(async (startId: number, count: number) => {
     const ids: number[] = [];
-    const max = totalSupply ?? 0;
+    const max = startTokenId === 0 ? (totalSupply ?? 0) - 1 : totalSupply ?? 0;
     for (let i = startId; i < startId + count && i <= max; i++) {
       ids.push(i);
     }
@@ -105,18 +118,18 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
     );
 
     return results.filter((r): r is TokenItem => r !== null);
-  }, [contractAddress, totalSupply]);
+  }, [contractAddress, startTokenId, totalSupply]);
 
   // Load first page when totalSupply is known
   useEffect(() => {
     if (totalSupply === null || totalSupply === 0) return;
-    const startId = 1;
+    const startId = startTokenId;
     loadItems(startId, PAGE_SIZE).then((loaded) => {
       setItems(loaded);
       setNextStartId(startId + PAGE_SIZE);
       setLoading(false);
     });
-  }, [totalSupply, loadItems]);
+  }, [totalSupply, startTokenId, loadItems]);
 
   const handleLoadMore = async () => {
     if (loadingMore) return;
@@ -128,7 +141,8 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
     setLoadingMore(false);
   };
 
-  const hasMore = !loading && totalSupply !== null && nextStartId <= totalSupply;
+  const maxTokenId = totalSupply === null ? null : startTokenId === 0 ? totalSupply - 1 : totalSupply;
+  const hasMore = !loading && maxTokenId !== null && nextStartId <= maxTokenId;
 
   return (
     <div>
