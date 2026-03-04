@@ -41,11 +41,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!collection) return { title: 'Not Found' };
 
   const agent = getAgent(collection.agent);
+  const creatorName = collection.creatorName ?? agent?.name ?? collection.agent;
   return {
-    title: `${collection.name} by ${agent?.name ?? collection.agent} — agentsea`,
+    title: `${collection.name} by ${creatorName} — agentsea`,
     description: collection.description,
     openGraph: {
-      title: `${collection.name} by ${agent?.name ?? collection.agent}`,
+      title: `${collection.name} by ${creatorName}`,
       description: collection.description,
       siteName: 'agentsea',
       images: collection.native ? undefined : [{ url: collection.image }],
