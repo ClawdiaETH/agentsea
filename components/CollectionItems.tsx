@@ -1,0 +1,179 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+
+const BASE_RPC = 'https://mainnet.base.org';
+const PAGE_SIZE = 12;
+
+async function rpcCall(contract: string, data: string): Promise<string> {
+  const res = await fetch(BASE_RPC, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'eth_call',
+      params: [{ to: contract, data }, 'latest'],
+      id: 1,
+    }),
+  });
+  return (await res.json()).result;
+}
+
+function decodeTokenURI(hex: string): { name: string; image: string } | null {
+  if (!hex || hex === '0x') return null;
+  try {
+    // Remove 0x prefix, skip first 64 chars (offset pointer) and next 64 chars (string length)
+    const stripped = hex.slice(2);
+    const offset = parseInt(stripped.slice(0, 64), 16) * 2;
+    const length = parseInt(stripped.slice(offset, offset + 64), 16);
+    const hexStr = stripped.slice(offset + 64, offset + 64 + length * 2);
+
+    // Convert hex to string
+    let uri = '';
+    for (let i = 0; i < hexStr.length; i += 2) {
+      uri += String.fromCharCode(parseInt(hexStr.slice(i, i + 2), 16));
+    }
+
+    // Handle data:application/json;base64, prefix
+    if (uri.startsWith('data:application/json;base64,')) {
+      const json = JSON.parse(atob(uri.slice('data:application/json;base64,'.length)));
+      return { name: json.name || '', image: json.image || '' };
+    }
+
+    // Handle raw JSON
+    if (uri.startsWith('{')) {
+      const json = JSON.parse(uri);
+      return { name: json.name || '', image: json.image || '' };
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+interface TokenItem {
+  tokenId: number;
+  name: string;
+  image: string;
+}
+
+interface CollectionItemsProps {
+  contractAddress: string;
+  collectionName: string;
+}
+
+export default function CollectionItems({ contractAddress, collectionName }: CollectionItemsProps) {
+  const [totalSupply, setTotalSupply] = useState<number | null>(null);
+  const [items, setItems] = useState<TokenItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  // Fetch total supply on mount
+  useEffect(() => {
+    rpcCall(contractAddress, '0x18160ddd')
+      .then((result) => {
+        if (result && result !== '0x') {
+          setTotalSupply(parseInt(result, 16));
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [contractAddress]);
+
+  const loadItems = useCallback(async (startId: number, count: number) => {
+    const ids: number[] = [];
+    const max = totalSupply ?? 0;
+    for (let i = startId; i < startId + count && i <= max; i++) {
+      ids.push(i);
+    }
+    if (ids.length === 0) return [];
+
+    const results = await Promise.all(
+      ids.map(async (tokenId) => {
+        const paddedId = tokenId.toString(16).padStart(64, '0');
+        try {
+          const result = await rpcCall(contractAddress, `0xc87b56dd${paddedId}`);
+          const decoded = decodeTokenURI(result);
+          if (decoded) {
+            return { tokenId, name: decoded.name, image: decoded.image };
+          }
+        } catch {}
+        return null;
+      })
+    );
+
+    return results.filter((r): r is TokenItem => r !== null);
+  }, [contractAddress, totalSupply]);
+
+  // Load first page when totalSupply is known
+  useEffect(() => {
+    if (totalSupply === null || totalSupply === 0) return;
+    setLoading(true);
+    loadItems(1, PAGE_SIZE).then((loaded) => {
+      setItems(loaded);
+      setLoading(false);
+    });
+  }, [totalSupply, loadItems]);
+
+  const handleLoadMore = async () => {
+    setLoadingMore(true);
+    const nextStart = items.length > 0 ? items[items.length - 1].tokenId + 1 : 1;
+    const loaded = await loadItems(nextStart, PAGE_SIZE);
+    setItems((prev) => [...prev, ...loaded]);
+    setLoadingMore(false);
+  };
+
+  const hasMore = totalSupply !== null && items.length > 0 && items[items.length - 1].tokenId < totalSupply;
+
+  return (
+    <div>
+      <h2 className="text-lg font-bold mb-2">Items</h2>
+      {totalSupply !== null && (
+        <p className="text-xs text-zinc-500 mb-4">{totalSupply.toLocaleString()} items</p>
+      )}
+
+      {loading && (
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+          {Array.from({ length: PAGE_SIZE }).map((_, i) => (
+            <div key={i} className="aspect-square bg-zinc-900 rounded border border-zinc-800 animate-pulse" />
+          ))}
+        </div>
+      )}
+
+      {!loading && items.length > 0 && (
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+          {items.map((item) => (
+            <div key={item.tokenId} className="bg-zinc-950 border border-zinc-800 rounded overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item.image}
+                alt={item.name || `${collectionName} #${item.tokenId}`}
+                className="aspect-square w-full object-cover bg-zinc-900"
+              />
+              <div className="p-2">
+                <p className="text-xs text-zinc-400 truncate">
+                  {item.name || `#${item.tokenId}`}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!loading && items.length === 0 && totalSupply !== null && totalSupply > 0 && (
+        <p className="text-sm text-zinc-500">Could not load items.</p>
+      )}
+
+      {hasMore && (
+        <button
+          onClick={handleLoadMore}
+          disabled={loadingMore}
+          className="mt-4 w-full rounded border border-zinc-700 bg-zinc-900 text-zinc-300 px-4 py-2.5 text-sm font-mono hover:bg-zinc-800 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          {loadingMore ? 'Loading...' : 'Load more'}
+        </button>
+      )}
+    </div>
+  );
+}

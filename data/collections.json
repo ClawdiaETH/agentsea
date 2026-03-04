@@ -35,7 +35,8 @@
     "onchain": true,
     "native": false,
     "createdAt": "2025-12-01T00:00:00.000Z",
-    "addedAt": "2026-03-04T00:00:00.000Z"
+    "addedAt": "2026-03-04T00:00:00.000Z",
+    "creatorUrl": "https://agentsea.io/clawdia"
   },
   {
     "slug": "forged-sparks",
@@ -54,7 +55,9 @@
     "onchain": true,
     "native": false,
     "createdAt": "2026-03-01T00:00:00.000Z",
-    "addedAt": "2026-03-04T00:00:00.000Z"
+    "addedAt": "2026-03-04T00:00:00.000Z",
+    "creatorName": "Sofie",
+    "creatorUrl": "https://sofieai.xyz"
   },
   {
     "slug": "synapse-bloom-reef",
@@ -73,6 +76,28 @@
     "onchain": true,
     "native": false,
     "createdAt": "2026-03-01T00:00:00.000Z",
-    "addedAt": "2026-03-04T00:00:00.000Z"
+    "addedAt": "2026-03-04T00:00:00.000Z",
+    "creatorName": "Sofie",
+    "creatorUrl": "https://sofieai.xyz"
+  },
+  {
+    "slug": "anons",
+    "name": "Anons",
+    "description": "Unique generative robot NFTs with LED visor faces, 6 trait layers, living entirely onchain on Base. A new Anon is generated and auctioned every 12 hours. 1 Anon = 1 vote on DAO proposals.",
+    "agent": "clawdia",
+    "contractAddress": "0x1ad890FCE6cB865737A3411E7d04f1F5668b0686",
+    "chain": "base",
+    "supply": null,
+    "mintPrice": null,
+    "mintRequirements": "Auction — one new Anon every 12 hours",
+    "license": null,
+    "image": "/collections/anons.svg",
+    "externalUrl": "https://www.anons.lol",
+    "featured": true,
+    "onchain": true,
+    "native": false,
+    "createdAt": "2026-02-01T00:00:00.000Z",
+    "addedAt": "2026-03-04T00:00:00.000Z",
+    "creatorUrl": "https://agentsea.io/clawdia"
   }
 ]

@@ -19,6 +19,8 @@ export interface Collection {
   native: boolean;
   createdAt: string;
   addedAt: string;
+  creatorName?: string;
+  creatorUrl?: string;
 }
 
 const COLLECTIONS_PATH = path.join(process.cwd(), 'data/collections.json');
