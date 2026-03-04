@@ -1,10 +1,12 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const links = [
   { href: '/gallery', label: 'Gallery' },
+  { href: '/collections', label: 'Collections' },
   { href: '/profile', label: 'Profile' },
   { href: '/register', label: 'Register' },
 ];
@@ -16,8 +18,15 @@ export default function Nav() {
     <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
       <Link
         href="/"
-        className="text-zinc-400 text-sm tracking-widest uppercase hover:text-white transition-colors"
+        className="flex items-center gap-2 text-zinc-400 text-sm tracking-widest uppercase hover:text-white transition-colors"
       >
+        <Image
+          src="/logo.png"
+          alt=""
+          width={24}
+          height={24}
+          className="rounded"
+        />
         agentsea
       </Link>
       <div className="flex items-center gap-4">
