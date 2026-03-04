@@ -51,7 +51,7 @@ export default function CollectionCard({
           <div className="flex gap-1.5 pt-1">
             {onchain && (
               <span className="text-[10px] text-emerald-400 border border-emerald-400/30 rounded px-1.5 py-0.5 leading-none">
-                ONCHAIN
+                Onchain
               </span>
             )}
             {license && (

@@ -183,7 +183,7 @@ export default function ProfilePage() {
                           unoptimized
                         />
                         <span className="absolute top-2 right-2 text-[10px] bg-emerald-900/80 text-emerald-300 px-1.5 py-0.5 rounded font-bold tracking-wider">
-                          {c.balance} OWNED
+                          {c.balance} owned
                         </span>
                       </div>
                       <div className="p-3">

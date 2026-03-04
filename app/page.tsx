@@ -81,7 +81,7 @@ export default async function Home() {
             {/* Buy button / sold state */}
             {piece.sold ? (
               <div className="w-full rounded border border-zinc-700 bg-zinc-900 text-zinc-400 px-6 py-4 text-center text-sm font-mono">
-                CLAIMED
+                Claimed
                 {piece.buyer && (
                   <span className="block text-xs text-zinc-600 mt-1 truncate">
                     {piece.buyer}
@@ -130,7 +130,7 @@ export default async function Home() {
         {/* Featured Collections */}
         {featuredCollections.length > 0 && (
           <div className="mt-16 border-t border-zinc-800 pt-12">
-            <h2 className="text-lg font-bold mb-6">Featured Collections</h2>
+            <h2 className="text-lg font-bold mb-6">Featured collections</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {featuredCollections.map((c) => {
                 const collAgent = getAgent(c.agent);

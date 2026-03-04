@@ -5,7 +5,7 @@ import { rpcCall } from '@/lib/rpc';
 
 const PAGE_SIZE = 12;
 
-function decodeTokenURI(hex: string): { name: string; image: string } | null {
+async function resolveTokenURI(hex: string): Promise<{ name: string; image: string } | null> {
   if (!hex || hex === '0x') return null;
   try {
     // Remove 0x prefix, skip first 64 chars (offset pointer) and next 64 chars (string length)
@@ -29,6 +29,14 @@ function decodeTokenURI(hex: string): { name: string; image: string } | null {
     // Handle raw JSON
     if (uri.startsWith('{')) {
       const json = JSON.parse(uri);
+      return { name: json.name || '', image: json.image || '' };
+    }
+
+    // Handle HTTP(S) URLs — fetch the metadata JSON
+    if (uri.startsWith('http://') || uri.startsWith('https://')) {
+      const res = await fetch(uri);
+      if (!res.ok) return null;
+      const json = await res.json();
       return { name: json.name || '', image: json.image || '' };
     }
 
@@ -108,7 +116,7 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
         const paddedId = tokenId.toString(16).padStart(64, '0');
         try {
           const result = await rpcCall(contractAddress, `0xc87b56dd${paddedId}`);
-          const decoded = decodeTokenURI(result);
+          const decoded = await resolveTokenURI(result);
           if (decoded) {
             return { tokenId, name: decoded.name, image: decoded.image };
           }

@@ -11,6 +11,7 @@ interface PieceCardProps {
   palette: string[];
   paletteName?: string;
   agentName?: string;
+  seriesTitle?: string;
 }
 
 export default function PieceCard({
@@ -22,6 +23,7 @@ export default function PieceCard({
   sold,
   palette,
   agentName,
+  seriesTitle,
 }: PieceCardProps) {
   return (
     <Link
@@ -38,11 +40,14 @@ export default function PieceCard({
         />
         {!sold && (
           <span className="absolute top-2 right-2 text-[10px] bg-yellow-900/80 text-yellow-300 px-1.5 py-0.5 rounded font-bold tracking-wider">
-            UNCLAIMED
+            Unclaimed
           </span>
         )}
       </div>
       <div className="p-3 space-y-1.5">
+        {seriesTitle && (
+          <p className="text-xs text-zinc-300 font-bold truncate">{seriesTitle}</p>
+        )}
         <div className="flex items-center justify-between">
           <span className="text-xs text-zinc-400">Day {dayNumber}</span>
           {sold ? (

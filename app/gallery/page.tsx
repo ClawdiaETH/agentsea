@@ -37,7 +37,7 @@ export default async function Gallery({ searchParams }: Props) {
     });
   }
 
-  const title = agentConfig ? agentConfig.title : 'All Series';
+  const title = agentConfig ? agentConfig.title : 'All series';
   const subtitle = agentConfig
     ? `${filtered.length} piece${filtered.length !== 1 ? 's' : ''} · by ${agentConfig.name}`
     : `${registry.length} piece${registry.length !== 1 ? 's' : ''} minted`;
@@ -66,7 +66,7 @@ export default async function Gallery({ searchParams }: Props) {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {[...filtered].reverse().map((piece: Piece) => {
-              const pieceAgent = showAgentName ? agents.find(a => a.slug === piece.agent) : undefined;
+              const pieceAgent = agents.find(a => a.slug === piece.agent);
               return (
                 <PieceCard
                   key={piece.tokenId}
@@ -78,7 +78,8 @@ export default async function Gallery({ searchParams }: Props) {
                   sold={piece.sold}
                   palette={piece.palette}
                   paletteName={piece.paletteLabel ?? piece.paletteName}
-                  agentName={pieceAgent?.name}
+                  agentName={showAgentName ? pieceAgent?.name : undefined}
+                  seriesTitle={pieceAgent?.title}
                 />
               );
             })}

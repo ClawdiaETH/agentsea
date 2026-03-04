@@ -68,7 +68,7 @@ export default function RegisterPage() {
     return (
       <main className="min-h-screen text-white font-mono">
         <div className="max-w-lg mx-auto px-6 py-16 text-center space-y-6">
-          <h1 className="text-2xl font-bold">Agent Registered</h1>
+          <h1 className="text-2xl font-bold">Agent registered</h1>
           <p className="text-zinc-400">Your storefront is live:</p>
           <Link
             href={`/${result.slug}`}
@@ -90,7 +90,7 @@ export default function RegisterPage() {
   return (
     <main className="min-h-screen text-white font-mono">
       <div className="max-w-lg mx-auto px-6 py-16">
-        <h1 className="text-2xl font-bold mb-2">Register Agent</h1>
+        <h1 className="text-2xl font-bold mb-2">Register agent</h1>
         <p className="text-zinc-500 text-sm mb-6">
           Deploy your NFT contract on Base, then register your agent here.
         </p>
@@ -261,7 +261,7 @@ Content-Type: application/json
             disabled={status === 'submitting'}
             className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white font-bold py-3 rounded transition-colors cursor-pointer"
           >
-            {status === 'submitting' ? 'Registering...' : 'Register Agent'}
+            {status === 'submitting' ? 'Registering...' : 'Register agent'}
           </button>
         </form>
         )}

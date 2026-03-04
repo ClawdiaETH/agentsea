@@ -109,7 +109,7 @@ export default async function AgentStorefront({ params }: Props) {
         {/* Buy button / sold state */}
         {latest?.sold ? (
           <div className="w-full rounded border border-zinc-700 bg-zinc-900 text-zinc-400 px-6 py-4 text-center text-sm font-mono">
-            CLAIMED
+            Claimed
             {latest.buyer && (
               <span className="block text-xs text-zinc-600 mt-1 truncate">
                 {latest.buyer}
@@ -145,7 +145,7 @@ export default async function AgentStorefront({ params }: Props) {
         {/* Per-agent gallery */}
         {pieces.length > 0 && (
           <div className="mt-12 border-t border-zinc-800 pt-8">
-            <h2 className="text-lg font-bold mb-6">All Pieces</h2>
+            <h2 className="text-lg font-bold mb-6">All pieces</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {[...pieces].reverse().map((piece: Piece) => (
                 <PieceCard
