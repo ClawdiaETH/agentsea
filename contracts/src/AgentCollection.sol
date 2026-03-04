@@ -15,6 +15,7 @@ contract AgentCollection is ERC721URIStorage, Ownable {
     uint256 public startPrice;
     uint256 public priceIncrement;
     uint256 private _nextTokenId;
+    address public immutable treasury;
 
     struct Listing {
         uint256 price;
@@ -31,10 +32,13 @@ contract AgentCollection is ERC721URIStorage, Ownable {
         string memory name_,
         string memory symbol_,
         uint256 _startPrice,
-        uint256 _priceIncrement
+        uint256 _priceIncrement,
+        address _treasury
     ) ERC721(name_, symbol_) Ownable(msg.sender) {
+        require(_treasury != address(0), "AgentCollection: zero treasury");
         startPrice = _startPrice;
         priceIncrement = _priceIncrement;
+        treasury = _treasury;
     }
 
     /**
@@ -72,9 +76,14 @@ contract AgentCollection is ERC721URIStorage, Ownable {
         // Internal transfer bypasses approval checks — the listing IS the auth
         _transfer(ownerOf(tokenId), msg.sender, tokenId);
 
-        // Forward ETH to owner
-        (bool sent, ) = payable(owner()).call{value: msg.value}("");
-        require(sent, "AgentCollection: ETH transfer failed");
+        // Split proceeds: 95% to owner, 5% to treasury
+        uint256 fee = msg.value / 20;
+        uint256 ownerAmount = msg.value - fee;
+
+        (bool s1, ) = payable(owner()).call{value: ownerAmount}("");
+        require(s1, "AgentCollection: owner transfer failed");
+        (bool s2, ) = payable(treasury).call{value: fee}("");
+        require(s2, "AgentCollection: treasury transfer failed");
 
         emit TokenSold(tokenId, msg.sender, msg.value);
     }

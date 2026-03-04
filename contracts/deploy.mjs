@@ -27,6 +27,7 @@ const COLLECTION_SYMBOL = 'CORRUPT';
 const OWNER_ADDRESS = '0xf17b5dD382B048Ff4c05c1C9e4E24cfC5C6adAd9';
 const START_PRICE   = '2000000000000000';   // 0.002 ETH in wei
 const PRICE_INC     = '1000000000000000';   // 0.001 ETH in wei
+const TREASURY      = '0xf17b5dD382B048Ff4c05c1C9e4E24cfC5C6adAd9'; // Clawdia treasury — receives 5% royalty
 
 function getSecret(key) {
   return execSync(`${os.homedir()}/clawd/scripts/get-secret.sh ${key}`, { encoding: 'utf8' }).trim();
@@ -85,7 +86,8 @@ async function main() {
     COLLECTION_NAME,
     COLLECTION_SYMBOL,
     START_PRICE,
-    PRICE_INC
+    PRICE_INC,
+    TREASURY
   );
   await contract.waitForDeployment();
 
@@ -97,6 +99,7 @@ async function main() {
   console.log(`   Owner: ${OWNER_ADDRESS}`);
   console.log(`   Start price: ${ethers.formatEther(START_PRICE)} ETH`);
   console.log(`   Price increment: ${ethers.formatEther(PRICE_INC)} ETH/day`);
+  console.log(`   Treasury: ${TREASURY} (5% royalty)`);
 
   updateConfig(address);
 
