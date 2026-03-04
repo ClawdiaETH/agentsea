@@ -1,23 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { rpcCall } from '@/lib/rpc';
 
-const BASE_RPC = 'https://mainnet.base.org';
 const PAGE_SIZE = 12;
-
-async function rpcCall(contract: string, data: string): Promise<string> {
-  const res = await fetch(BASE_RPC, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      jsonrpc: '2.0',
-      method: 'eth_call',
-      params: [{ to: contract, data }, 'latest'],
-      id: 1,
-    }),
-  });
-  return (await res.json()).result;
-}
 
 function decodeTokenURI(hex: string): { name: string; image: string } | null {
   if (!hex || hex === '0x') return null;
@@ -68,17 +54,31 @@ export default function CollectionItems({ contractAddress, collectionName }: Col
   const [items, setItems] = useState<TokenItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [nextStartId, setNextStartId] = useState(1);
 
   // Fetch total supply on mount
   useEffect(() => {
     rpcCall(contractAddress, '0x18160ddd')
       .then((result) => {
         if (result && result !== '0x') {
-          setTotalSupply(parseInt(result, 16));
+          const supply = parseInt(result, 16);
+          setItems([]);
+          setNextStartId(1);
+          setTotalSupply(supply);
+          setLoading(supply > 0);
+          return;
         }
+        setItems([]);
+        setNextStartId(1);
+        setTotalSupply(0);
+        setLoading(false);
       })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setItems([]);
+        setNextStartId(1);
+        setTotalSupply(0);
+        setLoading(false);
+      });
   }, [contractAddress]);
 
   const loadItems = useCallback(async (startId: number, count: number) => {
@@ -109,22 +109,25 @@ export default function CollectionItems({ contractAddress, collectionName }: Col
   // Load first page when totalSupply is known
   useEffect(() => {
     if (totalSupply === null || totalSupply === 0) return;
-    setLoading(true);
-    loadItems(1, PAGE_SIZE).then((loaded) => {
+    const startId = 1;
+    loadItems(startId, PAGE_SIZE).then((loaded) => {
       setItems(loaded);
+      setNextStartId(startId + PAGE_SIZE);
       setLoading(false);
     });
   }, [totalSupply, loadItems]);
 
   const handleLoadMore = async () => {
+    if (loadingMore) return;
     setLoadingMore(true);
-    const nextStart = items.length > 0 ? items[items.length - 1].tokenId + 1 : 1;
-    const loaded = await loadItems(nextStart, PAGE_SIZE);
+    const startId = nextStartId;
+    const loaded = await loadItems(startId, PAGE_SIZE);
     setItems((prev) => [...prev, ...loaded]);
+    setNextStartId(startId + PAGE_SIZE);
     setLoadingMore(false);
   };
 
-  const hasMore = totalSupply !== null && items.length > 0 && items[items.length - 1].tokenId < totalSupply;
+  const hasMore = !loading && totalSupply !== null && nextStartId <= totalSupply;
 
   return (
     <div>
