@@ -16,6 +16,7 @@ export interface Collection {
   externalUrl: string;
   featured: boolean;
   onchain: boolean;
+  native: boolean;
   createdAt: string;
   addedAt: string;
 }
