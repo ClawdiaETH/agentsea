@@ -182,7 +182,10 @@ export default async function CollectionPage({ params }: Props) {
     <main className="min-h-screen text-white font-mono">
       <div className="max-w-2xl mx-auto px-6 py-16">
         {/* Hero image */}
-        <div className="relative aspect-square w-full mb-8 bg-zinc-900 rounded overflow-hidden border border-zinc-800">
+        <div
+          className="relative w-full mb-8 bg-zinc-900 rounded overflow-hidden border border-zinc-800"
+          style={{ aspectRatio: collection.aspectRatio || '1/1' }}
+        >
           <Image
             src={collection.image}
             alt={collection.name}
@@ -267,6 +270,7 @@ export default async function CollectionPage({ params }: Props) {
             <CollectionItems
               contractAddress={collection.contractAddress}
               collectionName={collection.name}
+              aspectRatio={collection.aspectRatio}
             />
           </div>
         )}

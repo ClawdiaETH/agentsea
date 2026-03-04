@@ -47,9 +47,10 @@ interface TokenItem {
 interface CollectionItemsProps {
   contractAddress: string;
   collectionName: string;
+  aspectRatio?: string;
 }
 
-export default function CollectionItems({ contractAddress, collectionName }: CollectionItemsProps) {
+export default function CollectionItems({ contractAddress, collectionName, aspectRatio }: CollectionItemsProps) {
   const [totalSupply, setTotalSupply] = useState<number | null>(null);
   const [items, setItems] = useState<TokenItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,7 +140,7 @@ export default function CollectionItems({ contractAddress, collectionName }: Col
       {loading && (
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
           {Array.from({ length: PAGE_SIZE }).map((_, i) => (
-            <div key={i} className="aspect-square bg-zinc-900 rounded border border-zinc-800 animate-pulse" />
+            <div key={i} className="bg-zinc-900 rounded border border-zinc-800 animate-pulse" style={{ aspectRatio: aspectRatio || '1/1' }} />
           ))}
         </div>
       )}
@@ -152,7 +153,8 @@ export default function CollectionItems({ contractAddress, collectionName }: Col
               <img
                 src={item.image}
                 alt={item.name || `${collectionName} #${item.tokenId}`}
-                className="aspect-square w-full object-cover bg-zinc-900"
+                className="w-full object-cover bg-zinc-900"
+                style={{ aspectRatio: aspectRatio || '1/1' }}
               />
               <div className="p-2">
                 <p className="text-xs text-zinc-400 truncate">

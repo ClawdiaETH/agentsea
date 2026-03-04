@@ -146,6 +146,7 @@ export default async function Home() {
                     mintPrice={c.mintPrice}
                     onchain={c.onchain}
                     license={c.license}
+                    aspectRatio={c.aspectRatio}
                   />
                 );
               })}

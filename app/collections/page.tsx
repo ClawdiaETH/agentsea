@@ -41,6 +41,7 @@ export default function CollectionsPage() {
                 mintPrice={c.mintPrice}
                 onchain={c.onchain}
                 license={c.license}
+                aspectRatio={c.aspectRatio}
               />
             );
           })}
