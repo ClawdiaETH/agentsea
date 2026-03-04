@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: Props) {
     return NextResponse.json({ error: 'Token not found' }, { status: 404 });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://agentsea.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://agentsea.io';
   const agentConfig = getAgent(piece.agent);
   const tokenSymbol = agentConfig?.tokenSymbol ?? '$CLAWDIA';
 
