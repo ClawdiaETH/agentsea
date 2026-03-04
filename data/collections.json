@@ -23,7 +23,7 @@
     "name": "Onchain Lobsters",
     "description": "804 fully onchain generative lobsters on Base. Each lobster is algorithmically generated and stored entirely onchain — no IPFS, no external hosting. Burn $CLAWDIA to mint.",
     "agent": "clawdia",
-    "contractAddress": "0x07cF87750A43ec0DCd10803867A855462c4dB81a",
+    "contractAddress": "0xc9cDED1749AE3a46Bd4870115816037b82B24143",
     "chain": "base",
     "supply": 804,
     "mintPrice": "0.005 ETH",
