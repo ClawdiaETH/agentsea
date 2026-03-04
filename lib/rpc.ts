@@ -1,7 +1,12 @@
 const BASE_RPC = 'https://mainnet.base.org';
+const inFlightCalls = new Map<string, Promise<string>>();
 
 export async function rpcCall(contract: string, data: string): Promise<string> {
-  const res = await fetch(BASE_RPC, {
+  const key = `${contract.toLowerCase()}:${data.toLowerCase()}`;
+  const existing = inFlightCalls.get(key);
+  if (existing) return existing;
+
+  const call = fetch(BASE_RPC, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -10,6 +15,12 @@ export async function rpcCall(contract: string, data: string): Promise<string> {
       params: [{ to: contract, data }, 'latest'],
       id: 1,
     }),
-  });
-  return (await res.json()).result;
+  }).then(async (res) => (await res.json()).result as string);
+
+  inFlightCalls.set(key, call);
+  try {
+    return await call;
+  } finally {
+    inFlightCalls.delete(key);
+  }
 }
