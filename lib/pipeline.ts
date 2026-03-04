@@ -2,14 +2,14 @@ import { assembleDayLog } from './assembler';
 import { renderImage } from './renderer';
 import { uploadImage, uploadMetadata } from './pinata';
 import { mintNFT } from './contract';
-import { commitRegistry } from './github-commit';
+import { hasDayNumber, addEntry } from './kv-registry';
 import type { AgentConfig } from './agents';
 import type { DayLog } from './renderer/types';
 
 export interface PipelineSecrets {
   pinataJwt: string;
   privateKey: string;
-  githubToken: string;
+  githubToken?: string;
   contractAddress: string;
   startPrice: string;
   priceIncrement: string;
@@ -31,14 +31,20 @@ interface PipelineResult {
 }
 
 function getDayNumber(launchDate: string): number {
+  // Cron runs each morning to publish YESTERDAY's data.
+  // Day 1 = first day of data (launchDate). Published the day after.
+  // On March 3 (2 days after March 1 launch): diff=2 → day 2. ✓
   const launch = new Date(launchDate);
   const now = new Date();
   const diff = Math.floor((now.getTime() - launch.getTime()) / (1000 * 60 * 60 * 24));
-  return Math.max(1, diff + 1);
+  return Math.max(1, diff);
 }
 
 function getDateStr(): string {
-  return new Date().toISOString().slice(0, 10);
+  // Yesterday's date — cron always publishes the previous day's logs
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
 }
 
 function buildERC721Metadata(dayLog: DayLog, imageUri: string, agentSlug: string, seriesTitle?: string, tokenSymbol?: string) {
@@ -90,6 +96,12 @@ export async function runPipeline(secrets: PipelineSecrets): Promise<PipelineRes
   const dayNumber = getDayNumber(secrets.launchDate);
   const date = getDateStr();
 
+  // 0. Duplicate guard — check KV registry
+  const alreadyMinted = await hasDayNumber(dayNumber);
+  if (alreadyMinted) {
+    throw new Error(`Day ${dayNumber} already minted — skipping to prevent duplicate`);
+  }
+
   // 1. Assemble day log
   const dayLog = await assembleDayLog(dayNumber, date, secrets.agentSlug, secrets.agentConfig);
 
@@ -108,22 +120,7 @@ export async function runPipeline(secrets: PipelineSecrets): Promise<PipelineRes
   // 5. Mint NFT
   const { tokenId, txHash } = await mintNFT(metadataUri, secrets.contractAddress, secrets.privateKey);
 
-  // 6. Update registry and commit to GitHub
-  const registryUrl = `https://api.github.com/repos/ClawdiaETH/agentlogs/contents/data/registry.json`;
-  const getResp = await fetch(`${registryUrl}?ref=main`, {
-    headers: {
-      Authorization: `Bearer ${secrets.githubToken}`,
-      'User-Agent': 'agentsea-pipeline',
-    },
-  });
-
-  let registry: Record<string, unknown>[] = [];
-  if (getResp.ok) {
-    const data = await getResp.json();
-    const decoded = Buffer.from(data.content, 'base64').toString('utf8');
-    registry = JSON.parse(decoded);
-  }
-
+  // 6. Update KV registry
   const startPrice = BigInt(secrets.startPrice);
   const increment = BigInt(secrets.priceIncrement);
   const priceWei = startPrice + increment * BigInt(dayNumber - 1);
@@ -145,28 +142,24 @@ export async function runPipeline(secrets: PipelineSecrets): Promise<PipelineRes
     mintTx: txHash,
     paletteId: dayLog.paletteId,
     paletteLabel: dayLog.paletteLabel,
+    paletteName: dayLog.paletteLabel,
     palette: dayLog.palette,
     seed: `0x${(dayLog.seed >>> 0).toString(16).toUpperCase().padStart(8, '0')}`,
     stats: {
       commits: dayLog.commitCount,
       errors: dayLog.errors,
       messages: dayLog.messages,
+      events: 0,
       txns: dayLog.txns,
       posts: dayLog.posts,
+      peakHour: dayLog.peakHour,
       glitchIndex: Math.round(dayLog.glitchIndex),
       mcap: Math.round(dayLog.marketCap),
       change24h: parseFloat(dayLog.change24h.toFixed(2)),
     },
   };
 
-  registry.push(entry);
-  const registryContent = JSON.stringify(registry, null, 2);
-
-  await commitRegistry(
-    registryContent,
-    `mint: ${seriesTitle} Day ${dayNumber} — ${dayLog.paletteLabel}`,
-    secrets.githubToken,
-  );
+  await addEntry(entry);
 
   return { tokenId, dayNumber, txHash, imageUri, metadataUri };
 }

@@ -1,6 +1,6 @@
 const REPO = 'ClawdiaETH/agentlogs';
 const FILE_PATH = 'data/registry.json';
-const BRANCH = 'main';
+const BRANCH = 'master';
 
 /**
  * Commit an updated registry.json to GitHub via the Contents API.
