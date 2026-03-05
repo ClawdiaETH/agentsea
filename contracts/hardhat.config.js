@@ -37,5 +37,8 @@ module.exports = {
         browserURL: "https://basescan.org"
       }
     }]
+  },
+  sourcify: {
+    enabled: true
   }
 };
