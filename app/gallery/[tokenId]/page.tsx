@@ -73,7 +73,7 @@ export default async function GalleryDetail({ params }: Props) {
               year: 'numeric', month: 'long', day: 'numeric'
             })}
           </p>
-          <h1 className="text-2xl font-bold tracking-tight">{seriesTitle}</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{seriesTitle} #{String(piece.dayNumber).padStart(3, '0')}</h1>
           <p className="text-zinc-400 text-sm mt-1">by {agentName} · 1/1</p>
         </div>
 
