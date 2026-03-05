@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { useSendTransaction } from 'wagmi';
 import { encodeFunctionData, parseAbi } from 'viem';
 import { getMarketAddress } from '@/lib/marketplace';
@@ -26,8 +27,13 @@ function DelistButton({ contractAddress, tokenId, onDelisted }: { contractAddres
   const { sendTransaction, isPending, isSuccess } = useSendTransaction();
   const marketAddress = getMarketAddress();
 
+  useEffect(() => {
+    if (isSuccess) {
+      onDelisted?.();
+    }
+  }, [isSuccess, onDelisted]);
+
   if (isSuccess) {
-    onDelisted?.();
     return (
       <span className="block w-full text-[10px] text-center text-green-400 py-1">Delisted</span>
     );
