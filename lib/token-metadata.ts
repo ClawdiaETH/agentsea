@@ -54,10 +54,10 @@ export async function resolveTokenURI(hex: string): Promise<{ name: string; imag
  */
 export async function fetchTokenMetadata(
   contractAddress: string,
-  tokenId: number,
-): Promise<{ tokenId: number; name: string; image: string } | null> {
+  tokenId: string,
+): Promise<{ tokenId: string; name: string; image: string } | null> {
   try {
-    const paddedId = tokenId.toString(16).padStart(64, '0');
+    const paddedId = BigInt(tokenId).toString(16).padStart(64, '0');
     const result = await rpcCall(contractAddress, `${TOKEN_URI_SELECTOR}${paddedId}`);
     const decoded = await resolveTokenURI(result);
     if (decoded) {

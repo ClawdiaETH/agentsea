@@ -7,7 +7,7 @@ import { encodeFunctionData, parseAbi } from 'viem';
 import { getMarketAddress } from '@/lib/marketplace';
 
 interface OwnedPieceCardProps {
-  tokenId: number;
+  tokenId: string;
   name: string;
   image: string;
   collectionName: string;
@@ -23,7 +23,7 @@ interface OwnedPieceCardProps {
 
 const delistAbi = parseAbi(['function delist(address nft, uint256 tokenId)']);
 
-function DelistButton({ contractAddress, tokenId, onDelisted }: { contractAddress: string; tokenId: number; onDelisted?: () => void }) {
+function DelistButton({ contractAddress, tokenId, onDelisted }: { contractAddress: string; tokenId: string; onDelisted?: () => void }) {
   const { sendTransaction, isPending, isSuccess } = useSendTransaction();
   const marketAddress = getMarketAddress();
 

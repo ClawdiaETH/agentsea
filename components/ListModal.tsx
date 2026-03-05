@@ -8,7 +8,7 @@ import { getMarketAddress } from '@/lib/marketplace';
 
 interface ListModalProps {
   nftAddress: string;
-  tokenId: number;
+  tokenId: string;
   tokenName: string;
   onClose: () => void;
   onListed: () => void;

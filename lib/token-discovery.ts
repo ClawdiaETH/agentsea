@@ -14,7 +14,7 @@ export async function discoverOwnedTokens(
   contractAddress: string,
   ownerAddress: string,
   fromBlock = DEFAULT_FROM_BLOCK,
-): Promise<number[]> {
+): Promise<string[]> {
   const paddedOwner = '0x' + ownerAddress.slice(2).toLowerCase().padStart(64, '0');
 
   // Query Transfer events TO this address (topic2 = receiver)
@@ -32,14 +32,14 @@ export async function discoverOwnedTokens(
   });
 
   // Extract token IDs from logs — topic[3] for indexed tokenId
-  const received = new Map<number, number>(); // tokenId → count
+  const received = new Map<string, number>(); // tokenId → count
   for (const log of receivedLogs) {
-    const tokenId = parseInt(log.topics[3], 16);
+    const tokenId = BigInt(log.topics[3]).toString();
     received.set(tokenId, (received.get(tokenId) ?? 0) + 1);
   }
 
   for (const log of sentLogs) {
-    const tokenId = parseInt(log.topics[3], 16);
+    const tokenId = BigInt(log.topics[3]).toString();
     const current = received.get(tokenId) ?? 0;
     if (current <= 1) {
       received.delete(tokenId);
@@ -48,5 +48,10 @@ export async function discoverOwnedTokens(
     }
   }
 
-  return Array.from(received.keys()).sort((a, b) => a - b);
+  return Array.from(received.keys()).sort((a, b) => {
+    const aBig = BigInt(a);
+    const bBig = BigInt(b);
+    if (aBig === bBig) return 0;
+    return aBig < bBig ? -1 : 1;
+  });
 }

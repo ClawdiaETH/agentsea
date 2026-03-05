@@ -8,9 +8,9 @@ function formatEthDisplay(valueWei: bigint): string {
   return `${whole}.${fraction.padEnd(4, '0').slice(0, 4)}`;
 }
 
-export interface MarketListing {
+export interface MarketListing<TTokenId extends string | number = string | number> {
   nftAddress: string;
-  tokenId: number;
+  tokenId: TTokenId;
   seller: string;
   price: string; // wei
   priceEth: string;
@@ -20,10 +20,10 @@ export interface MarketListing {
  * Check if a specific token is listed on the marketplace.
  * Uses direct contract read — efficient for checking individual tokens.
  */
-export async function getTokenListing(
+export async function getTokenListing<TTokenId extends string | number>(
   nftAddress: string,
-  tokenId: number,
-): Promise<MarketListing | null> {
+  tokenId: TTokenId,
+): Promise<MarketListing<TTokenId> | null> {
   if (!MARKET_ADDRESS) return null;
 
   try {
@@ -31,7 +31,7 @@ export async function getTokenListing(
     // selector: first 4 bytes of keccak256("getListing(address,uint256)")
     const selector = '0x88700d1c'; // keccak256("getListing(address,uint256)")
     const paddedNft = nftAddress.slice(2).toLowerCase().padStart(64, '0');
-    const paddedId = tokenId.toString(16).padStart(64, '0');
+    const paddedId = BigInt(tokenId).toString(16).padStart(64, '0');
 
     const result = await rpcCall(MARKET_ADDRESS, `${selector}${paddedNft}${paddedId}`);
     if (!result || result === '0x') return null;

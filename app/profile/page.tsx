@@ -13,7 +13,7 @@ import registry from '../../data/registry.json';
 import collections from '../../data/collections.json';
 
 interface OwnedToken {
-  tokenId: number;
+  tokenId: string;
   name: string;
   image: string;
 }
@@ -25,7 +25,7 @@ interface CollectionSection {
   aspectRatio?: string;
   pixelArt?: boolean;
   tokens: OwnedToken[];
-  listings: Map<number, MarketListing>;
+  listings: Map<string, MarketListing<string>>;
   loading: boolean;
 }
 
@@ -38,7 +38,7 @@ export default function ProfilePage() {
   const loadSectionsRequestRef = useRef(0);
   const [listingModal, setListingModal] = useState<{
     nftAddress: string;
-    tokenId: number;
+    tokenId: string;
     tokenName: string;
   } | null>(null);
 
@@ -74,7 +74,7 @@ export default function ProfilePage() {
         aspectRatio: c.aspectRatio,
         pixelArt: c.pixelArt,
         tokens: [],
-        listings: new Map(),
+        listings: new Map<string, MarketListing<string>>(),
         loading: true,
       }))
     );
@@ -115,7 +115,7 @@ export default function ProfilePage() {
 
           // Check marketplace listings for owned tokens
           if (getMarketAddress()) {
-            const listingsMap = new Map<number, MarketListing>();
+            const listingsMap = new Map<string, MarketListing<string>>();
             for (const token of tokens) {
               const listing = await getTokenListing(collection.contractAddress, token.tokenId);
               if (listing) listingsMap.set(token.tokenId, listing);
@@ -257,7 +257,16 @@ export default function ProfilePage() {
                               tokenName: token.name || `${section.name} #${token.tokenId}`,
                             })
                           }
-                          onDelisted={loadSections}
+                          onDelisted={() => {
+                            setSections((prev) =>
+                              prev.map((s) => {
+                                if (s.slug !== section.slug || !s.listings.has(token.tokenId)) return s;
+                                const nextListings = new Map(s.listings);
+                                nextListings.delete(token.tokenId);
+                                return { ...s, listings: nextListings };
+                              })
+                            );
+                          }}
                         />
                       );
                     })}
