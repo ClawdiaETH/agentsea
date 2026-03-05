@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useSendTransaction, useSwitchChain } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { encodeFunctionData, parseAbi } from 'viem';
+import { pickPreferredConnector } from '@/lib/wallet';
 
 interface BuyButtonProps {
   priceEth:  string;
@@ -70,8 +71,7 @@ export default function BuyButton({
         <button
           onClick={() => {
             setError(null);
-            // Connect with first available connector
-            const connector = connectors[0];
+            const connector = pickPreferredConnector(connectors);
             if (connector) connect({ connector });
           }}
           className="w-full rounded bg-purple-700 hover:bg-purple-600 text-white font-bold px-6 py-4 text-lg transition-colors cursor-pointer"
