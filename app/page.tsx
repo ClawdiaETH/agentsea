@@ -66,7 +66,7 @@ export default async function Home() {
               <p className="text-xs text-zinc-500 tracking-widest uppercase mb-1">
                 Day {dayNumber} · {pieceDate}
               </p>
-              <h3 className="text-xl font-bold tracking-tight">{agent?.title ?? piece.title}</h3>
+              <h3 className="text-xl font-bold tracking-tight">{agent?.title ?? piece.title} #{String(dayNumber).padStart(3, '0')}</h3>
               <p className="text-zinc-400 text-sm mt-1">1/1</p>
             </div>
 
