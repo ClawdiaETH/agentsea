@@ -272,6 +272,7 @@ export default async function CollectionPage({ params }: Props) {
             <CollectionItems
               contractAddress={collection.contractAddress}
               collectionName={collection.name}
+              collectionSlug={slug}
               aspectRatio={collection.aspectRatio}
               knownSupply={collection.supply}
               pixelArt={collection.pixelArt}

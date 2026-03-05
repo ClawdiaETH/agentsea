@@ -1,7 +1,13 @@
-import { rpcCall } from './rpc';
-import { formatEther } from 'viem';
+import { rpcCall, rpcGetBlockNumber, rpcGetLogs } from './rpc';
+import { formatEther, keccak256, toHex } from 'viem';
 
 const MARKET_ADDRESS = process.env.NEXT_PUBLIC_MARKET_CONTRACT || '';
+
+// Listed(address indexed nft, uint256 indexed tokenId, address indexed seller, uint256 price)
+const LISTED_TOPIC = keccak256(toHex('Listed(address,uint256,address,uint256)'));
+
+// 30 days of blocks on Base (2s block time)
+const SCAN_BLOCKS = 30 * 24 * 60 * 30; // ~1,296,000
 
 function formatEthDisplay(valueWei: bigint): string {
   const [whole, fraction = ''] = formatEther(valueWei).split('.');
@@ -59,4 +65,45 @@ export async function getTokenListing<TTokenId extends string | number>(
 
 export function getMarketAddress(): string {
   return MARKET_ADDRESS;
+}
+
+/**
+ * Scan Listed events to discover all active marketplace listings.
+ * Deduplicates by nft+tokenId (latest event wins), then validates
+ * each against getListing() to filter sold/delisted items.
+ */
+export async function getAllActiveListings(): Promise<MarketListing<string>[]> {
+  if (!MARKET_ADDRESS) return [];
+
+  try {
+    const head = await rpcGetBlockNumber();
+    const fromBlock = Math.max(0, head - SCAN_BLOCKS);
+
+    const logs = await rpcGetLogs({
+      address: MARKET_ADDRESS,
+      topics: [LISTED_TOPIC],
+      fromBlock,
+      toBlock: head,
+    });
+
+    // Deduplicate: keep latest event per nft+tokenId
+    const candidates = new Map<string, { nft: string; tokenId: string }>();
+    for (const log of logs) {
+      if (log.topics.length < 4) continue;
+      const nft = '0x' + log.topics[1].slice(26);
+      const tokenId = BigInt(log.topics[2]).toString();
+      candidates.set(`${nft.toLowerCase()}:${tokenId}`, { nft, tokenId });
+    }
+
+    // Validate each candidate is still actively listed
+    const results = await Promise.all(
+      Array.from(candidates.values()).map(({ nft, tokenId }) =>
+        getTokenListing(nft, tokenId),
+      ),
+    );
+
+    return results.filter((r): r is MarketListing<string> => r !== null);
+  } catch {
+    return [];
+  }
 }
