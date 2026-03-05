@@ -192,6 +192,7 @@ export default async function CollectionPage({ params }: Props) {
             alt={collection.name}
             fill
             className="object-cover"
+            style={collection.pixelArt ? { imageRendering: 'pixelated' } : undefined}
             priority
             unoptimized
           />
@@ -273,6 +274,7 @@ export default async function CollectionPage({ params }: Props) {
               collectionName={collection.name}
               aspectRatio={collection.aspectRatio}
               knownSupply={collection.supply}
+              pixelArt={collection.pixelArt}
             />
           </div>
         )}

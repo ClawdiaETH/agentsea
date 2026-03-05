@@ -22,6 +22,7 @@ export interface Collection {
   creatorName?: string;
   creatorUrl?: string;
   aspectRatio?: string;
+  pixelArt?: boolean;
 }
 
 const COLLECTIONS_PATH = path.join(process.cwd(), 'data/collections.json');

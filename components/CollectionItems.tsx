@@ -65,9 +65,10 @@ interface CollectionItemsProps {
   collectionName: string;
   aspectRatio?: string;
   knownSupply?: number | null;
+  pixelArt?: boolean;
 }
 
-export default function CollectionItems({ contractAddress, collectionName, aspectRatio, knownSupply }: CollectionItemsProps) {
+export default function CollectionItems({ contractAddress, collectionName, aspectRatio, knownSupply, pixelArt }: CollectionItemsProps) {
   const [totalSupply, setTotalSupply] = useState<number | null>(null);
   const [items, setItems] = useState<TokenItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -199,7 +200,7 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
                 src={item.image}
                 alt={item.name || `${collectionName} #${item.tokenId}`}
                 className="w-full object-cover bg-zinc-900"
-                style={{ aspectRatio: aspectRatio || '1/1' }}
+                style={{ aspectRatio: aspectRatio || '1/1', imageRendering: pixelArt ? 'pixelated' : undefined }}
               />
               <div className="p-2">
                 <p className="text-xs text-zinc-400 truncate">
