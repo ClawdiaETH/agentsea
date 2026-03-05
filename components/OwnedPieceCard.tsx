@@ -1,10 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { useSendTransaction } from 'wagmi';
-import { encodeFunctionData, parseAbi } from 'viem';
-import { getMarketAddress } from '@/lib/marketplace';
+import DelistButton from './DelistButton';
 
 interface OwnedPieceCardProps {
   tokenId: string;
@@ -19,43 +16,6 @@ interface OwnedPieceCardProps {
   onListClick?: () => void;
   onDelisted?: () => void;
   isOwner?: boolean;
-}
-
-const delistAbi = parseAbi(['function delist(address nft, uint256 tokenId)']);
-
-function DelistButton({ contractAddress, tokenId, onDelisted }: { contractAddress: string; tokenId: string; onDelisted?: () => void }) {
-  const { sendTransaction, isPending, isSuccess } = useSendTransaction();
-  const marketAddress = getMarketAddress();
-
-  useEffect(() => {
-    if (isSuccess) {
-      onDelisted?.();
-    }
-  }, [isSuccess, onDelisted]);
-
-  if (isSuccess) {
-    return (
-      <span className="block w-full text-[10px] text-center text-green-400 py-1">Delisted</span>
-    );
-  }
-
-  return (
-    <button
-      onClick={() => {
-        if (!marketAddress) return;
-        const data = encodeFunctionData({
-          abi: delistAbi,
-          functionName: 'delist',
-          args: [contractAddress as `0x${string}`, BigInt(tokenId)],
-        });
-        sendTransaction({ to: marketAddress as `0x${string}`, data });
-      }}
-      disabled={isPending}
-      className="w-full text-[10px] font-bold text-red-400 border border-red-900 rounded px-2 py-1 hover:bg-red-950 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      {isPending ? 'Delisting...' : 'Delist'}
-    </button>
-  );
 }
 
 export default function OwnedPieceCard({
@@ -74,7 +34,7 @@ export default function OwnedPieceCard({
 }: OwnedPieceCardProps) {
   return (
     <div className="bg-zinc-950 border border-zinc-800 rounded overflow-hidden hover:border-zinc-600 transition-colors group">
-      <Link href={`/collections/${collectionSlug}`}>
+      <Link href={`/collections/${collectionSlug}/${tokenId}`}>
         <div className="relative bg-zinc-900" style={{ aspectRatio: aspectRatio || '1/1' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

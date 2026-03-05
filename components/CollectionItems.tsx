@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { rpcCall } from '@/lib/rpc';
 import { resolveTokenURI } from '@/lib/token-metadata';
 import { getTokenListing, getMarketAddress } from '@/lib/marketplace';
@@ -19,12 +20,13 @@ interface TokenItem {
 interface CollectionItemsProps {
   contractAddress: string;
   collectionName: string;
+  collectionSlug?: string;
   aspectRatio?: string;
   knownSupply?: number | null;
   pixelArt?: boolean;
 }
 
-export default function CollectionItems({ contractAddress, collectionName, aspectRatio, knownSupply, pixelArt }: CollectionItemsProps) {
+export default function CollectionItems({ contractAddress, collectionName, collectionSlug, aspectRatio, knownSupply, pixelArt }: CollectionItemsProps) {
   const [totalSupply, setTotalSupply] = useState<number | null>(null);
   const [items, setItems] = useState<TokenItem[]>([]);
   const [listings, setListings] = useState<Map<number, MarketListing>>(new Map());
@@ -174,8 +176,9 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {items.map((item) => {
             const listing = listings.get(item.tokenId);
-            return (
-              <div key={item.tokenId} className="bg-zinc-950 border border-zinc-800 rounded overflow-hidden">
+            const detailHref = collectionSlug ? `/collections/${collectionSlug}/${item.tokenId}` : null;
+            const cardContent = (
+              <>
                 <div className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -190,19 +193,26 @@ export default function CollectionItems({ contractAddress, collectionName, aspec
                     </span>
                   )}
                 </div>
-                <div className="p-2 space-y-2">
+                <div className="p-2">
                   <p className="text-xs text-zinc-400 truncate">
                     {item.name || `#${item.tokenId}`}
                   </p>
-                  {listing && (
+                </div>
+              </>
+            );
+            return (
+              <div key={item.tokenId} className="bg-zinc-950 border border-zinc-800 rounded overflow-hidden hover:border-zinc-600 transition-colors">
+                {detailHref ? <Link href={detailHref}>{cardContent}</Link> : cardContent}
+                {listing && (
+                  <div className="px-2 pb-2">
                     <MarketBuyButton
                       nftAddress={contractAddress}
                       tokenId={item.tokenId}
                       priceWei={listing.price}
                       priceEth={listing.priceEth}
                     />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             );
           })}
