@@ -16,5 +16,5 @@ export function pickPreferredConnector<T extends ConnectorLike>(
     (connector) => connector.type === 'walletConnect',
   );
 
-  return injected ?? walletConnect ?? connectors[0];
+  return injected ?? walletConnect;
 }
