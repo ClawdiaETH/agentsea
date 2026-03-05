@@ -44,7 +44,11 @@ export default function TokenDetailPage() {
     const [meta, listingResult, ownerResult] = await Promise.all([
       fetchFullTokenMetadata(col.contractAddress, tokenId),
       getTokenListing(col.contractAddress, tokenId),
-      rpcCall(col.contractAddress, `${OWNER_OF_SELECTOR}${BigInt(tokenId).toString(16).padStart(64, '0')}`).catch(() => null),
+      Promise.resolve()
+        .then(() =>
+          rpcCall(col.contractAddress, `${OWNER_OF_SELECTOR}${BigInt(tokenId).toString(16).padStart(64, '0')}`)
+        )
+        .catch(() => null),
     ]);
 
     setMetadata(meta);
