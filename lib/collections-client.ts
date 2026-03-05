@@ -12,7 +12,3 @@ export function getCollectionByAddress(address: string): Collection | undefined 
     (c) => c.contractAddress.toLowerCase() === address.toLowerCase(),
   );
 }
-
-export function getAllCollections(): Collection[] {
-  return collections;
-}

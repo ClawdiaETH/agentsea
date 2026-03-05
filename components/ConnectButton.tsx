@@ -59,6 +59,7 @@ export default function ConnectButton() {
   function autoConnect() {
     reset();
     setStuckTimeout(false);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
     const connector = pickPreferredConnector(connectors);
     if (!connector) return;

@@ -88,57 +88,36 @@ export default function MarketplacePage() {
               const detailHref = card.collectionSlug
                 ? `/collections/${card.collectionSlug}/${card.listing.tokenId}`
                 : null;
+              const cardContent = (
+                <>
+                  <div className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={card.image}
+                      alt={card.name}
+                      className="w-full object-cover bg-zinc-900"
+                      style={{
+                        aspectRatio: card.aspectRatio || '1/1',
+                        imageRendering: card.pixelArt ? 'pixelated' : undefined,
+                      }}
+                    />
+                    <span className="absolute top-2 right-2 text-[10px] bg-purple-900/80 text-purple-300 px-1.5 py-0.5 rounded font-bold">
+                      {card.listing.priceEth} ETH
+                    </span>
+                  </div>
+                  <div className="p-2">
+                    <p className="text-xs text-zinc-300 truncate font-medium">{card.name}</p>
+                    <p className="text-[10px] text-zinc-600 truncate">{card.collectionName}</p>
+                  </div>
+                </>
+              );
 
               return (
                 <div
                   key={`${card.listing.nftAddress}:${card.listing.tokenId}`}
                   className="bg-zinc-950 border border-zinc-800 rounded overflow-hidden hover:border-zinc-600 transition-colors"
                 >
-                  {detailHref ? (
-                    <Link href={detailHref}>
-                      <div className="relative">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={card.image}
-                          alt={card.name}
-                          className="w-full object-cover bg-zinc-900"
-                          style={{
-                            aspectRatio: card.aspectRatio || '1/1',
-                            imageRendering: card.pixelArt ? 'pixelated' : undefined,
-                          }}
-                        />
-                        <span className="absolute top-2 right-2 text-[10px] bg-purple-900/80 text-purple-300 px-1.5 py-0.5 rounded font-bold">
-                          {card.listing.priceEth} ETH
-                        </span>
-                      </div>
-                      <div className="p-2">
-                        <p className="text-xs text-zinc-300 truncate font-medium">{card.name}</p>
-                        <p className="text-[10px] text-zinc-600 truncate">{card.collectionName}</p>
-                      </div>
-                    </Link>
-                  ) : (
-                    <>
-                      <div className="relative">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={card.image}
-                          alt={card.name}
-                          className="w-full object-cover bg-zinc-900"
-                          style={{
-                            aspectRatio: card.aspectRatio || '1/1',
-                            imageRendering: card.pixelArt ? 'pixelated' : undefined,
-                          }}
-                        />
-                        <span className="absolute top-2 right-2 text-[10px] bg-purple-900/80 text-purple-300 px-1.5 py-0.5 rounded font-bold">
-                          {card.listing.priceEth} ETH
-                        </span>
-                      </div>
-                      <div className="p-2">
-                        <p className="text-xs text-zinc-300 truncate font-medium">{card.name}</p>
-                        <p className="text-[10px] text-zinc-600 truncate">{card.collectionName}</p>
-                      </div>
-                    </>
-                  )}
+                  {detailHref ? <Link href={detailHref}>{cardContent}</Link> : cardContent}
                   <div className="px-2 pb-2">
                     <MarketBuyButton
                       nftAddress={card.listing.nftAddress}

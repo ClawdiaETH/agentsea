@@ -177,53 +177,32 @@ export default function CollectionItems({ contractAddress, collectionName, colle
           {items.map((item) => {
             const listing = listings.get(item.tokenId);
             const detailHref = collectionSlug ? `/collections/${collectionSlug}/${item.tokenId}` : null;
+            const cardContent = (
+              <>
+                <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.image}
+                    alt={item.name || `${collectionName} #${item.tokenId}`}
+                    className="w-full object-cover bg-zinc-900"
+                    style={{ aspectRatio: aspectRatio || '1/1', imageRendering: pixelArt ? 'pixelated' : undefined }}
+                  />
+                  {listing && (
+                    <span className="absolute top-2 right-2 text-[10px] bg-purple-900/80 text-purple-300 px-1.5 py-0.5 rounded font-bold">
+                      {listing.priceEth} ETH
+                    </span>
+                  )}
+                </div>
+                <div className="p-2">
+                  <p className="text-xs text-zinc-400 truncate">
+                    {item.name || `#${item.tokenId}`}
+                  </p>
+                </div>
+              </>
+            );
             return (
               <div key={item.tokenId} className="bg-zinc-950 border border-zinc-800 rounded overflow-hidden hover:border-zinc-600 transition-colors">
-                {detailHref ? (
-                  <Link href={detailHref}>
-                    <div className="relative">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={item.image}
-                        alt={item.name || `${collectionName} #${item.tokenId}`}
-                        className="w-full object-cover bg-zinc-900"
-                        style={{ aspectRatio: aspectRatio || '1/1', imageRendering: pixelArt ? 'pixelated' : undefined }}
-                      />
-                      {listing && (
-                        <span className="absolute top-2 right-2 text-[10px] bg-purple-900/80 text-purple-300 px-1.5 py-0.5 rounded font-bold">
-                          {listing.priceEth} ETH
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-2">
-                      <p className="text-xs text-zinc-400 truncate">
-                        {item.name || `#${item.tokenId}`}
-                      </p>
-                    </div>
-                  </Link>
-                ) : (
-                  <>
-                    <div className="relative">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={item.image}
-                        alt={item.name || `${collectionName} #${item.tokenId}`}
-                        className="w-full object-cover bg-zinc-900"
-                        style={{ aspectRatio: aspectRatio || '1/1', imageRendering: pixelArt ? 'pixelated' : undefined }}
-                      />
-                      {listing && (
-                        <span className="absolute top-2 right-2 text-[10px] bg-purple-900/80 text-purple-300 px-1.5 py-0.5 rounded font-bold">
-                          {listing.priceEth} ETH
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-2">
-                      <p className="text-xs text-zinc-400 truncate">
-                        {item.name || `#${item.tokenId}`}
-                      </p>
-                    </div>
-                  </>
-                )}
+                {detailHref ? <Link href={detailHref}>{cardContent}</Link> : cardContent}
                 {listing && (
                   <div className="px-2 pb-2">
                     <MarketBuyButton
