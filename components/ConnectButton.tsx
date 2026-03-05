@@ -1,8 +1,15 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
+import {
+  useAccount,
+  useAccountEffect,
+  useConnect,
+  useDisconnect,
+  useSwitchChain,
+} from 'wagmi';
 import { base } from 'wagmi/chains';
+import { pickPreferredConnector } from '@/lib/wallet';
 
 export default function ConnectButton() {
   const { address, chain, isConnecting } = useAccount();
@@ -11,6 +18,11 @@ export default function ConnectButton() {
   const { switchChain } = useSwitchChain();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  useAccountEffect({
+    onConnect: () => setOpen(false),
+    onDisconnect: () => setOpen(false),
+  });
 
   // Close dropdown on outside click/touch
   useEffect(() => {
@@ -28,18 +40,8 @@ export default function ConnectButton() {
 
   // Pick best connector: prefer injected (browser wallet), fall back to WalletConnect
   function autoConnect() {
-    const injected = connectors.find(
-      (c) => c.type === 'injected' && typeof window !== 'undefined' && window.ethereum,
-    );
-    const wc = connectors.find((c) => c.type === 'walletConnect');
-    const connector = injected ?? wc ?? connectors[0];
+    const connector = pickPreferredConnector(connectors);
     if (connector) connect({ connector });
-  }
-
-  // Friendly connector names
-  function connectorLabel(name: string): string {
-    if (name === 'Injected') return 'Browser Wallet';
-    return name;
   }
 
   // Wrong chain
