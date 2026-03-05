@@ -180,6 +180,7 @@ export default async function AgentStorefront({ params }: Props) {
                   onchain={c.onchain}
                   license={c.license}
                   aspectRatio={c.aspectRatio}
+                  pixelArt={c.pixelArt}
                 />
               ))}
             </div>

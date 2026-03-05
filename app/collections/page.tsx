@@ -42,6 +42,7 @@ export default function CollectionsPage() {
                 onchain={c.onchain}
                 license={c.license}
                 aspectRatio={c.aspectRatio}
+                pixelArt={c.pixelArt}
               />
             );
           })}

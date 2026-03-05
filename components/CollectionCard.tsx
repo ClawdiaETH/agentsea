@@ -11,6 +11,7 @@ interface CollectionCardProps {
   onchain: boolean;
   license: string | null;
   aspectRatio?: string;
+  pixelArt?: boolean;
 }
 
 export default function CollectionCard({
@@ -23,6 +24,7 @@ export default function CollectionCard({
   onchain,
   license,
   aspectRatio,
+  pixelArt,
 }: CollectionCardProps) {
   return (
     <Link
@@ -35,6 +37,7 @@ export default function CollectionCard({
           alt={name}
           fill
           className="object-cover"
+          style={pixelArt ? { imageRendering: 'pixelated' } : undefined}
           unoptimized
         />
       </div>
