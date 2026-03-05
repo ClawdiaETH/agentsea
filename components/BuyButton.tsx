@@ -15,7 +15,7 @@ interface BuyButtonProps {
 }
 
 const buyAbi = parseAbi(['function buy(uint256 tokenId) payable']);
-const priceAbi = parseAbi(['function getPrice(uint256 tokenId) view returns (uint256)']);
+const priceAbi = parseAbi(['function getPrice(uint256 dayNumber) view returns (uint256)']);
 
 function friendlyError(err: unknown): string {
   const msg = (err as Error)?.message ?? String(err);
@@ -40,12 +40,12 @@ export default function BuyButton({
   const { switchChain } = useSwitchChain();
   const { sendTransaction, isPending, isSuccess, data: txHash, error: txError, reset } = useSendTransaction();
 
-  // Fetch on-chain price for this tokenId — source of truth
+  // Fetch on-chain price for this day number — source of truth
   const { data: onchainPrice } = useReadContract({
     address: saleContract as `0x${string}`,
     abi: priceAbi,
     functionName: 'getPrice',
-    args: [BigInt(tokenId)],
+    args: [BigInt(dayNumber)],
     chainId: base.id,
     query: { enabled: !!saleContract },
   });
