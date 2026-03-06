@@ -65,6 +65,19 @@ export default function BuyButton({
     if (txError) setError(friendlyError(txError));
   }, [txError]);
 
+  // Notify backend when purchase succeeds so registry updates
+  const [notified, setNotified] = useState(false);
+  useEffect(() => {
+    if (isSuccess && txHash && !notified) {
+      setNotified(true);
+      fetch('/api/mark-sold', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokenId, saleContract }),
+      }).catch(() => {}); // best-effort
+    }
+  }, [isSuccess, txHash, notified, tokenId, saleContract]);
+
   // Success state
   if (isSuccess && txHash) {
     return (
