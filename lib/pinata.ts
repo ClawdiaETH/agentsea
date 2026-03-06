@@ -98,7 +98,7 @@ export async function repinToIPFS(
     },
     body: JSON.stringify({
       url: `https://${pinataGateway}/files/${cidV1}`,
-      date: Date.now(),
+      date: Math.floor(Date.now() / 1000),
       expires: 300,
       method: 'GET',
     }),
