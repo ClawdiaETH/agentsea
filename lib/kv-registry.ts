@@ -69,8 +69,12 @@ export async function getRegistry(): Promise<RegistryEntry[]> {
   if (!kv) return readJsonFallback();
 
   try {
-    const data = await kv.get<RegistryEntry[]>(REGISTRY_KEY);
-    if (data && data.length > 0) {
+    let data = await kv.get<RegistryEntry[]>(REGISTRY_KEY);
+    // Upstash may return a JSON string instead of parsed array
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch { data = null; }
+    }
+    if (Array.isArray(data) && data.length > 0) {
       return data;
     }
     // KV is empty — seed from JSON and return

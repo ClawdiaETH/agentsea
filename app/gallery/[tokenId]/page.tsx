@@ -136,5 +136,6 @@ export default async function GalleryDetail({ params }: Props) {
 
 export async function generateStaticParams() {
   const registry = await getRegistry();
+  if (!Array.isArray(registry)) return [];
   return registry.map((p: Piece) => ({ tokenId: String(p.tokenId) }));
 }
