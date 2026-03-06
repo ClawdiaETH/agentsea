@@ -1,6 +1,9 @@
 import type { LayerFn } from '../types';
 
 const GLYPH_MAP: Record<string, string> = {
+  agentsea:        '[CS]',
+  agentlogs:       '[OL]',
+  clawd:           '[CLA]',
   spellblock:      '[SB]',
   'anons-dao':     '[AN]',
   'agentfails-wtf':'[AF]',

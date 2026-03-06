@@ -18,7 +18,10 @@ export const metadataLine: LayerFn = (ctx, _rng, dayLog, colors) => {
   }
 
   const symbol = dayLog.tokenSymbol ?? '$CLAWDIA';
-  const text = `${symbol} / BASE / MCAP ${mcapStr} / ${dayLog.paletteId}`;
+  const changeStr = dayLog.change24h >= 0
+    ? `+${dayLog.change24h.toFixed(1)}%`
+    : `${dayLog.change24h.toFixed(1)}%`;
+  const text = `${symbol} / BASE / MCAP ${mcapStr} ${changeStr} / ${dayLog.paletteId} / DAY ${dayLog.dayNumber}`;
 
   ctx.globalAlpha = 0.5;
   ctx.fillStyle = colors.WHT;
@@ -26,6 +29,14 @@ export const metadataLine: LayerFn = (ctx, _rng, dayLog, colors) => {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(text, 380, 748);
+
+  // Stats line above the bar
+  const statsText = `txns=${dayLog.txns} posts=${dayLog.posts} err=${dayLog.errors}`;
+  ctx.globalAlpha = 0.35;
+  ctx.font = '9px JetBrainsMono';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(statsText, 12, 733);
 
   ctx.globalAlpha = 1;
   ctx.textAlign = 'left';
