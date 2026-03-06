@@ -10,6 +10,9 @@ import { getCollectionsByAgent } from '@/lib/collections';
 import CollectionCard from '@/components/CollectionCard';
 import { getRegistry } from '@/lib/kv-registry';
 import type { RegistryEntry } from '@/lib/kv-registry';
+import { isTokenListed } from '@/lib/sale-listing';
+
+export const revalidate = 60;
 
 type Piece = RegistryEntry;
 
@@ -59,6 +62,16 @@ export default async function AgentStorefront({ params }: Props) {
   const pieces = registry.filter((p: Piece) => p.agent === agent.toLowerCase());
   const collections = getCollectionsByAgent(agent.toLowerCase());
   const latest = pieces[pieces.length - 1];
+
+  // Verify sold status on-chain for unsold pieces
+  for (const piece of pieces) {
+    if (!piece.sold && config.nftContract) {
+      try {
+        const listed = await isTokenListed(config.nftContract, piece.tokenId);
+        if (!listed) piece.sold = true;
+      } catch {}
+    }
+  }
 
   // Use actual registry data when a piece exists, fall back to computed values for preview
   const dayNumber = latest?.dayNumber ?? getDayNumber(config.launchDate);
