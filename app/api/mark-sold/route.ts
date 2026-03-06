@@ -36,10 +36,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Already marked as sold' });
     }
 
-    const saleContract = getAgent(entry.agent)?.nftContract;
-    if (!saleContract) {
+    const agent = getAgent(entry.agent);
+    if (!agent?.nftContract) {
       return NextResponse.json({ error: 'Sale contract not configured' }, { status: 500 });
     }
+    const saleContract = agent.nftContract;
 
     const isListed = await isTokenListed(saleContract, parsedTokenId);
 
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
     await markSold(parsedTokenId, buyer);
 
     // Revalidate the collection page so it shows updated status
-    revalidatePath('/collections/corrupt-memory');
+    revalidatePath(`/collections/${agent.slug}`);
 
     return NextResponse.json({ message: 'Marked as sold', tokenId: parsedTokenId });
   } catch (err) {

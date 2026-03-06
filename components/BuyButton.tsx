@@ -1,7 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useConnect, useSendTransaction, useSwitchChain, useReadContract } from 'wagmi';
+import {
+  useAccount,
+  useConnect,
+  useSendTransaction,
+  useSwitchChain,
+  useReadContract,
+  useWaitForTransactionReceipt,
+} from 'wagmi';
 import { base } from 'wagmi/chains';
 import { encodeFunctionData, parseAbi, formatEther } from 'viem';
 import { pickPreferredConnector } from '@/lib/wallet';
@@ -38,7 +45,19 @@ export default function BuyButton({
   const { address, chain, isConnected } = useAccount();
   const { connectors, connect } = useConnect();
   const { switchChain } = useSwitchChain();
-  const { sendTransaction, isPending, isSuccess, data: txHash, error: txError, reset } = useSendTransaction();
+  const {
+    sendTransaction,
+    isPending,
+    isSuccess: isTxSubmitted,
+    data: txHash,
+    error: txError,
+    reset,
+  } = useSendTransaction();
+  const { isSuccess: isTxConfirmed } = useWaitForTransactionReceipt({
+    chainId: base.id,
+    hash: txHash,
+    query: { enabled: !!txHash },
+  });
 
   // Fetch listing price for this token ID — source of truth for buy()
   const { data: listing } = useReadContract({
@@ -68,7 +87,7 @@ export default function BuyButton({
   // Notify backend when purchase succeeds so registry updates
   const [notified, setNotified] = useState(false);
   useEffect(() => {
-    if (isSuccess && txHash && address && !notified) {
+    if (isTxConfirmed && txHash && address && !notified) {
       setNotified(true);
       fetch('/api/mark-sold', {
         method: 'POST',
@@ -76,10 +95,10 @@ export default function BuyButton({
         body: JSON.stringify({ tokenId, buyer: address }),
       }).catch(() => {}); // best-effort
     }
-  }, [isSuccess, txHash, address, notified, tokenId]);
+  }, [isTxConfirmed, txHash, address, notified, tokenId]);
 
   // Success state
-  if (isSuccess && txHash) {
+  if (isTxSubmitted && txHash) {
     return (
       <div className="space-y-3">
         <div className="w-full rounded border border-green-800 bg-green-950 text-green-300 px-6 py-4 text-center text-sm">
