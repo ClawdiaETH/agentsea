@@ -173,16 +173,16 @@
     ],
     "seed": "0x1715609D",
     "stats": {
-      "commits": 0,
-      "errors": 0,
-      "messages": 0,
-      "events": 0,
+      "commits": 21,
+      "errors": 132,
+      "messages": 20,
+      "events": 20,
       "txns": 0,
       "posts": 0,
-      "peakHour": 16,
-      "glitchIndex": 0,
-      "mcap": 137229,
-      "change24h": -8.82
+      "peakHour": 0,
+      "glitchIndex": 100,
+      "mcap": 155540,
+      "change24h": 14.24
     }
   }
 ]
