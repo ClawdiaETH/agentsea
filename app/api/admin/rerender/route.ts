@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { renderImage } from '@/lib/renderer';
+import { selectPalette } from '@/lib/renderer/palette';
 import { uploadImage } from '@/lib/pinata';
 import { getRegistry, setRegistry } from '@/lib/kv-registry';
 import { revalidatePath } from 'next/cache';
@@ -41,8 +42,21 @@ export async function GET(request: Request) {
 
     try {
       // Reconstruct DayLog from registry data
-      const dayLog: DayLog = {
+      const partialLog = {
         dayNumber: entry.dayNumber,
+        errors: entry.stats?.errors ?? 0,
+        txns: entry.stats?.txns ?? 0,
+        posts: entry.stats?.posts ?? 0,
+        messages: entry.stats?.messages ?? 0,
+        peakHour: entry.stats?.peakHour ?? 12,
+        glitchIndex: entry.stats?.glitchIndex ?? 0,
+      };
+
+      // Recompute palette from current stats (errors >= 100 → INCIDENT, etc.)
+      const pal = selectPalette(partialLog);
+
+      const dayLog: DayLog = {
+        ...partialLog,
         date: entry.date,
         agent: entry.agent,
         seed: parseInt(entry.seed, 16) || entry.dayNumber,
@@ -59,16 +73,10 @@ export async function GET(request: Request) {
         commits: [],
         commitCount: entry.stats?.commits ?? 0,
         reposActive: [],
-        txns: entry.stats?.txns ?? 0,
-        posts: entry.stats?.posts ?? 0,
-        errors: entry.stats?.errors ?? 0,
-        messages: entry.stats?.messages ?? 0,
-        peakHour: entry.stats?.peakHour ?? 12,
-        glitchIndex: entry.stats?.glitchIndex ?? 0,
         replies: { twitter: [], farcaster: [], combined: [] },
-        paletteId: entry.paletteId,
-        paletteLabel: entry.paletteLabel,
-        palette: entry.palette,
+        paletteId: pal.id,
+        paletteLabel: pal.label,
+        palette: pal.colors,
       };
 
       // Re-render the image
@@ -83,6 +91,10 @@ export async function GET(request: Request) {
 
       const newGatewayUrl = imageUri.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/');
       entry.ipfsImage = newGatewayUrl;
+      entry.paletteId = pal.id;
+      entry.paletteLabel = pal.label;
+      entry.paletteName = pal.label;
+      entry.palette = pal.colors;
       updated = true;
 
       results.push({
@@ -101,6 +113,7 @@ export async function GET(request: Request) {
   if (updated) {
     await setRegistry(registry);
     revalidatePath('/');
+    revalidatePath('/clawdia');
     revalidatePath('/collections/corrupt-memory');
     revalidatePath('/gallery');
   }
