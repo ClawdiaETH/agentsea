@@ -1,122 +1,134 @@
 import type { LayerFn } from '../types';
+import { withAlpha } from '../utils';
 
-/** Layer 7: Structural geometry — rects, concentric squares, barcodes, crosses, dot grid, mosaic patches, edge bleeds */
+/** Layer 11: Geometry — rectangles, squares, strips, barcodes, crosses, dots, edge bleeds */
 export const geometry: LayerFn = (ctx, rng, dayLog, colors) => {
-  const gi = dayLog.glitchIndex / 100; // 0–1
+  const intensity = Math.max(0.3, (dayLog.glitchIndex ?? 0) / 100);
 
-  // Filled rects with corner ticks
-  const rectCount = 3 + Math.floor(rng() * 4);
+  // Large filled rectangles (4–8)
+  const rectCount = 4 + Math.floor(rng() * 5);
   for (let i = 0; i < rectCount; i++) {
-    const x = Math.floor(rng() * 600);
-    const y = Math.floor(rng() * 600);
-    const w = 40 + Math.floor(rng() * 160);
-    const h = 30 + Math.floor(rng() * 120);
-
-    ctx.globalAlpha = 0.08 + rng() * 0.10;
-    ctx.fillStyle = rng() > 0.5 ? colors.DOM : colors.SEC;
+    const x = Math.floor(rng() * 760 * 0.8);
+    const y = Math.floor(rng() * 760 * 0.8);
+    const w = 80 + Math.floor(rng() * 200);
+    const h = 50 + Math.floor(rng() * 180);
+    const col = [colors.DOM, colors.SEC, colors.ACC, colors.BLK][Math.floor(rng() * 4)];
+    ctx.fillStyle = withAlpha(col, 0.30 + rng() * 0.25);
     ctx.fillRect(x, y, w, h);
 
-    // Corner ticks
-    ctx.globalAlpha = 0.20 + rng() * 0.15;
-    ctx.strokeStyle = colors.ACC;
-    ctx.lineWidth = 1;
-    const tickLen = 6;
-    // Top-left
-    ctx.beginPath(); ctx.moveTo(x, y + tickLen); ctx.lineTo(x, y); ctx.lineTo(x + tickLen, y); ctx.stroke();
-    // Top-right
-    ctx.beginPath(); ctx.moveTo(x + w - tickLen, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + tickLen); ctx.stroke();
-    // Bottom-left
-    ctx.beginPath(); ctx.moveTo(x, y + h - tickLen); ctx.lineTo(x, y + h); ctx.lineTo(x + tickLen, y + h); ctx.stroke();
-    // Bottom-right
-    ctx.beginPath(); ctx.moveTo(x + w - tickLen, y + h); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w, y + h - tickLen); ctx.stroke();
+    ctx.strokeStyle = withAlpha(colors.ACC, 0.75);
+    ctx.lineWidth = 1.5;
+    const tick = 10;
+    ([[x,y],[x+w,y],[x,y+h],[x+w,y+h]] as [number,number][]).forEach(([cx,cy]) => {
+      ctx.beginPath(); ctx.moveTo(cx - tick, cy); ctx.lineTo(cx + tick, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy - tick); ctx.lineTo(cx, cy + tick); ctx.stroke();
+    });
   }
 
-  // Concentric squares (center of canvas)
-  const cx = 380 + Math.floor((rng() - 0.5) * 100);
-  const cy = 380 + Math.floor((rng() - 0.5) * 100);
-  const layers = 3 + Math.floor(rng() * 3);
-  for (let i = 0; i < layers; i++) {
-    const size = 40 + i * 35;
-    ctx.globalAlpha = 0.12 - i * 0.015;
-    ctx.strokeStyle = colors.DOM;
-    ctx.lineWidth = 1;
-    ctx.strokeRect(cx - size / 2, cy - size / 2, size, size);
+  // Concentric squares (2–4)
+  const sqCount = 2 + Math.floor(rng() * 3);
+  for (let i = 0; i < sqCount; i++) {
+    const cx = 100 + Math.floor(rng() * 560);
+    const cy = 100 + Math.floor(rng() * 560);
+    const sizes = [120, 88, 60, 36, 18].slice(0, 3 + Math.floor(rng() * 3));
+    const sqColors = [colors.WHT, colors.ACC, colors.SEC, colors.DOM];
+    sizes.forEach((s, idx) => {
+      ctx.strokeStyle = withAlpha(sqColors[idx % sqColors.length], 0.45 + idx * 0.08);
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(cx - s/2, cy - s/2, s, s);
+    });
   }
 
-  // Glitch strips — horizontal bars
-  const stripCount = Math.floor(gi * 8);
+  // Glitch strips
+  const stripCount = Math.floor(intensity * 18) + 5;
   for (let i = 0; i < stripCount; i++) {
-    const sy = Math.floor(rng() * 760);
-    const sh = 1 + Math.floor(rng() * 3);
-    const sx = Math.floor(rng() * 200);
-    const sw = 100 + Math.floor(rng() * 500);
-    ctx.globalAlpha = 0.10 + rng() * 0.14;
-    ctx.fillStyle = colors.ACC;
-    ctx.fillRect(sx, sy, sw, sh);
+    const y = Math.floor(rng() * 760);
+    const h = 1 + Math.floor(rng() * 4);
+    const w = 30 + Math.floor(rng() * (760 * 0.85));
+    const x = Math.floor(rng() * (760 - w));
+    ctx.fillStyle = withAlpha(rng() < 0.5 ? colors.ACC : colors.WHT, 0.25 + rng() * 0.40);
+    ctx.fillRect(x, y, w, h);
   }
 
-  // Barcodes — thin vertical lines in a cluster
-  const bcX = 560 + Math.floor(rng() * 120);
-  const bcY = 100 + Math.floor(rng() * 400);
-  const barCount = 8 + Math.floor(rng() * 12);
-  for (let i = 0; i < barCount; i++) {
-    const bw = 1 + Math.floor(rng() * 3);
-    const bh = 20 + Math.floor(rng() * 40);
-    ctx.globalAlpha = 0.1 + rng() * 0.1;
-    ctx.fillStyle = rng() > 0.6 ? colors.WHT : colors.SEC;
-    ctx.fillRect(bcX + i * 4, bcY, bw, bh);
-  }
-
-  // Crosses
-  const crossCount = 2 + Math.floor(rng() * 3);
-  for (let i = 0; i < crossCount; i++) {
-    const crx = Math.floor(rng() * 700);
-    const cry = Math.floor(rng() * 700);
-    const arm = 8 + Math.floor(rng() * 12);
-    ctx.globalAlpha = 0.1 + rng() * 0.1;
-    ctx.strokeStyle = colors.ACC;
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(crx - arm, cry); ctx.lineTo(crx + arm, cry); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(crx, cry - arm); ctx.lineTo(crx, cry + arm); ctx.stroke();
-  }
-
-  // Dot grid — sparse
-  const dotGridX = Math.floor(rng() * 300);
-  const dotGridY = Math.floor(rng() * 300);
-  const dotSpacing = 12 + Math.floor(rng() * 8);
-  for (let dx = 0; dx < 8; dx++) {
-    for (let dy = 0; dy < 8; dy++) {
-      ctx.globalAlpha = 0.06 + rng() * 0.04;
-      ctx.fillStyle = colors.SEC;
-      ctx.fillRect(dotGridX + dx * dotSpacing, dotGridY + dy * dotSpacing, 2, 2);
+  // Barcode structures (2–3)
+  const bcCount = 2 + Math.floor(rng() * 2);
+  for (let i = 0; i < bcCount; i++) {
+    const bx = Math.floor(rng() * (760 - 100));
+    const by = Math.floor(rng() * 760);
+    const bh = 24 + Math.floor(rng() * 50);
+    const barCount = 16 + Math.floor(rng() * 24);
+    for (let b = 0; b < barCount; b++) {
+      const bw = 1 + Math.floor(rng() * 4);
+      const gap = 1 + Math.floor(rng() * 3);
+      const bxPos = bx + b * (bw + gap);
+      if (bxPos + bw > 760) break;
+      ctx.fillStyle = withAlpha(rng() < 0.6 ? colors.WHT : colors.SEC, 0.40 + rng() * 0.45);
+      ctx.fillRect(bxPos, by, bw, bh);
     }
   }
 
-  // Mosaic patches — small colored squares
-  const patchCount = Math.floor(gi * 6);
-  for (let i = 0; i < patchCount; i++) {
-    const px = Math.floor(rng() * 720);
-    const py = Math.floor(rng() * 720);
-    const ps = 8 + Math.floor(rng() * 16);
-    for (let mx = 0; mx < ps; mx += 4) {
-      for (let my = 0; my < ps; my += 4) {
-        ctx.globalAlpha = 0.14 + rng() * 0.14;
-        ctx.fillStyle = [colors.DOM, colors.SEC, colors.ACC][Math.floor(rng() * 3)];
-        ctx.fillRect(px + mx, py + my, 4, 4);
+  // Crosses (3–6)
+  const crossCount = 3 + Math.floor(rng() * 4);
+  for (let i = 0; i < crossCount; i++) {
+    const cx = Math.floor(rng() * 760);
+    const cy = Math.floor(rng() * 760);
+    const arm = 20 + Math.floor(rng() * 60);
+    const thick = 2 + Math.floor(rng() * 3);
+    const col = [colors.WHT, colors.ACC, colors.DOM][Math.floor(rng() * 3)];
+    ctx.fillStyle = withAlpha(col, 0.40 + rng() * 0.40);
+    ctx.fillRect(cx - arm, cy - Math.floor(thick/2), arm * 2, thick);
+    ctx.fillRect(cx - Math.floor(thick/2), cy - arm, thick, arm * 2);
+  }
+
+  // Dot grid
+  const activity = Math.min(1, (dayLog.txns ?? 0) / 500 + (dayLog.posts ?? 0) / 200);
+  const dotSpacing = Math.max(16, Math.floor(36 - activity * 20));
+  for (let gx = dotSpacing; gx < 760 - dotSpacing; gx += dotSpacing) {
+    for (let gy = dotSpacing; gy < 760 - dotSpacing; gy += dotSpacing) {
+      if (rng() < 0.35) continue;
+      ctx.fillStyle = withAlpha(colors.WHT, 0.10 + rng() * 0.18);
+      ctx.fillRect(gx + Math.floor(rng() * 4 - 2), gy + Math.floor(rng() * 4 - 2), 1, 1);
+    }
+  }
+
+  // Mosaic patches (2–4)
+  const mosCount = 2 + Math.floor(rng() * 3);
+  for (let i = 0; i < mosCount; i++) {
+    const mx = Math.floor(rng() * (760 - 80));
+    const my = Math.floor(rng() * (760 - 80));
+    const tileSize = 5 + Math.floor(rng() * 8);
+    const tiles = 5 + Math.floor(rng() * 7);
+    const mosCols = [colors.DOM, colors.SEC, colors.ACC, colors.BLK, colors.WHT];
+    for (let tx = 0; tx < tiles; tx++) {
+      for (let ty = 0; ty < tiles; ty++) {
+        if (rng() < 0.25) continue;
+        ctx.fillStyle = withAlpha(mosCols[Math.floor(rng() * mosCols.length)], 0.50 + rng() * 0.40);
+        ctx.fillRect(mx + tx * tileSize, my + ty * tileSize, tileSize, tileSize);
       }
     }
   }
 
-  // Edge bleeds — thin lines at canvas edges
-  for (let i = 0; i < 3; i++) {
-    const edge = Math.floor(rng() * 4); // 0=top, 1=right, 2=bottom, 3=left
-    ctx.globalAlpha = 0.06 + rng() * 0.06;
-    ctx.fillStyle = colors.DOM;
-    if (edge === 0) ctx.fillRect(0, 0, 760, 2);
-    else if (edge === 1) ctx.fillRect(758, 0, 2, 760);
-    else if (edge === 2) ctx.fillRect(0, 758, 760, 2);
-    else ctx.fillRect(0, 0, 2, 760);
-  }
+  // Edge bleeds
+  const leftGrad = ctx.createLinearGradient(0, 0, 22, 0);
+  leftGrad.addColorStop(0, withAlpha(colors.DOM, 0.55));
+  leftGrad.addColorStop(1, 'hsla(0,0%,0%,0)');
+  ctx.fillStyle = leftGrad;
+  ctx.fillRect(0, 0, 22, 760);
 
-  ctx.globalAlpha = 1;
+  const rightGrad = ctx.createLinearGradient(760 - 22, 0, 760, 0);
+  rightGrad.addColorStop(0, 'hsla(0,0%,0%,0)');
+  rightGrad.addColorStop(1, withAlpha(colors.SEC, 0.55));
+  ctx.fillStyle = rightGrad;
+  ctx.fillRect(760 - 22, 0, 22, 760);
+
+  // Vertical tear
+  const tearX = 50 + Math.floor(rng() * 660);
+  const tearW = 1 + Math.floor(rng() * 3);
+  const tearGrad = ctx.createLinearGradient(0, 760 * 0.1, 0, 760 * 0.9);
+  tearGrad.addColorStop(0, 'hsla(0,0%,0%,0)');
+  tearGrad.addColorStop(0.3, withAlpha(colors.WHT, 0.45));
+  tearGrad.addColorStop(0.7, withAlpha(colors.WHT, 0.45));
+  tearGrad.addColorStop(1, 'hsla(0,0%,0%,0)');
+  ctx.fillStyle = tearGrad;
+  ctx.fillRect(tearX, 76, tearW, 608);
 };

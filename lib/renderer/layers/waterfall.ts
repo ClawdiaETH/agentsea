@@ -1,20 +1,25 @@
 import type { LayerFn } from '../types';
+import { withAlpha } from '../utils';
 
-/** Layer 5: Tall vertical streaks in DOM/SEC, width scaled by mcapNorm */
+/** Layer 5: Waterfall streaks — wide gradient columns */
 export const waterfall: LayerFn = (ctx, rng, dayLog, colors) => {
-  const scale = 1 + dayLog.mcapNorm * 0.8; // 1.0–1.8
-  const streakCount = 12 + Math.floor(rng() * 8);
+  const widthMult = 1.0 + dayLog.mcapNorm * 1.2; // 1.0–2.2×
+  const streakCount = 8 + Math.floor(rng() * 8);  // 8–15
 
   for (let i = 0; i < streakCount; i++) {
     const x = Math.floor(rng() * 760);
-    const width = Math.floor((2 + rng() * 6) * scale);
-    const height = 200 + Math.floor(rng() * 500);
-    const y = Math.floor(rng() * (760 - height));
+    const w = Math.floor((20 + rng() * 40) * widthMult); // 20–60px scaled
+    const h = 100 + Math.floor(rng() * 320);
+    const y = Math.floor(rng() * (760 - h));
+    const col = [colors.DOM, colors.SEC, colors.ACC][Math.floor(rng() * 3)];
+    const alpha = 0.30 + rng() * 0.30; // 0.30–0.60
 
-    ctx.globalAlpha = 0.04 + rng() * 0.06;
-    ctx.fillStyle = rng() > 0.5 ? colors.DOM : colors.SEC;
-    ctx.fillRect(x, y, width, height);
+    const grad = ctx.createLinearGradient(0, y, 0, y + h);
+    grad.addColorStop(0, 'hsla(0,0%,0%,0)');
+    grad.addColorStop(0.2, withAlpha(col, alpha));
+    grad.addColorStop(0.8, withAlpha(col, alpha));
+    grad.addColorStop(1, 'hsla(0,0%,0%,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, w, h);
   }
-
-  ctx.globalAlpha = 1;
 };

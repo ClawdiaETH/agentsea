@@ -1,48 +1,30 @@
 import type { LayerFn } from '../types';
+import { withAlpha } from '../utils';
 
-const LOG_TEMPLATES = [
-  'INIT_SEQUENCE OK',
-  'HEARTBEAT: latency {}ms',
-  'TX_POOL: {} pending',
-  'MEM_ALLOC: {}MB',
-  'SYNC_BLOCK: #{}',
-  'RPC_CALL: eth_getBalance',
-  'CACHE_HIT ratio: {}%',
-  'QUEUE_DEPTH: {}',
-  'GC_PAUSE: {}ms',
-  'SOCKET_OPEN: ws://relay-{}',
-  'FEED_INGEST: {} events',
-  'CRON_TICK: daily_mint',
-  'DB_QUERY: {}ms',
-  'RATE_LIMIT: {}/min',
-  'WEBHOOK_RECV: 200 OK',
-  'IPFS_PIN: Qm{}',
-  'SIGNER_READY: 0x{}',
-  'ERR_TIMEOUT: retry #{}',
-  'MINT_GAS: {} gwei',
-  'PALETTE_SELECT: {}',
-];
+/** Layer 12: Sparse operational stats scatter — lower half of canvas */
+export const logText: LayerFn = (ctx, rng, dayLog, _colors) => {
+  // Use colors via the passed-in colors parameter
+  const lines = [
+    `txns=${dayLog.txns ?? 0} posts=${dayLog.posts ?? 0} err=${dayLog.errors ?? 0}`,
+    `msgs=${dayLog.messages ?? 0} peak=${dayLog.peakHour ?? 0}:00 UTC`,
+    `glitch_idx=${dayLog.glitchIndex ?? 0}`,
+    `projects: ${dayLog.reposActive?.join(', ') || 'none'}`,
+    `[corrupt memory]`,
+    `[clawdia.operational.base]`,
+    `context overflow → truncating`,
+    `[MEM] pre-compaction flush`,
+  ];
 
-/** Layer 8: Faint operational log lines scattered across upper half */
-export const logText: LayerFn = (ctx, rng, dayLog, colors) => {
-  const lineCount = 8 + Math.floor(rng() * 12);
-
-  ctx.font = '9px JetBrainsMono';
-  ctx.textBaseline = 'top';
-
+  ctx.font = '9px monospace';
+  const lineCount = 8 + Math.floor(rng() * 8);
   for (let i = 0; i < lineCount; i++) {
-    const template = LOG_TEMPLATES[Math.floor(rng() * LOG_TEMPLATES.length)];
-    const val = Math.floor(rng() * 9999);
-    const text = template.replace('{}', String(val));
-
-    const x = 12 + Math.floor(rng() * 400);
-    const y = 20 + Math.floor(rng() * 340);
-
-    ctx.globalAlpha = 0.12 + rng() * 0.14;
-    ctx.fillStyle = rng() > 0.7 ? colors.ACC : colors.SEC;
-    ctx.fillText(text, x, y);
+    const x = Math.floor(rng() * (760 - 220));
+    const y = 760 * 0.68 + Math.floor(rng() * (760 * 0.28));
+    const line = lines[i % lines.length];
+    // Need colors from outer scope — use global alpha trick
+    ctx.globalAlpha = 0.12 + rng() * 0.18;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(line, x, y);
   }
-
   ctx.globalAlpha = 1;
-  ctx.textBaseline = 'alphabetic';
 };

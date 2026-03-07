@@ -1,20 +1,12 @@
 import type { LayerFn } from '../types';
+import { withAlpha } from '../utils';
 
-/** Layer 14: Full-canvas horizontal lines, opacity scaled by glitchIndex */
+/** Layer 17: Scan lines — every 2px, opacity scales with glitch index */
 export const scanlines: LayerFn = (ctx, _rng, dayLog, colors) => {
-  const intensity = Math.min(1, dayLog.glitchIndex / 100);
-  const alpha = 0.02 + intensity * 0.06;
-
-  ctx.globalAlpha = alpha;
-  ctx.strokeStyle = colors.WHT;
-  ctx.lineWidth = 1;
-
-  for (let y = 0; y < 760; y += 3) {
-    ctx.beginPath();
-    ctx.moveTo(0, y + 0.5);
-    ctx.lineTo(760, y + 0.5);
-    ctx.stroke();
+  const intensity = (dayLog.glitchIndex ?? 0) / 100;
+  const opacity = 0.06 + intensity * 0.10;
+  ctx.fillStyle = withAlpha(colors.BLK, opacity);
+  for (let y = 0; y < 760; y += 2) {
+    ctx.fillRect(0, y, 760, 1);
   }
-
-  ctx.globalAlpha = 1;
 };

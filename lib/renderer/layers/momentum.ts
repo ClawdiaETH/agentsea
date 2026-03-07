@@ -1,19 +1,19 @@
 import type { LayerFn } from '../types';
 
-/** Layer 3: Green (up) or red (down) gradient wash, max 16% opacity */
+/** Layer 3: Market cap momentum overlay */
 export const momentum: LayerFn = (ctx, _rng, dayLog, _colors) => {
-  const isUp = dayLog.momentumSign > 0;
-  const mag = dayLog.momentumMag; // 0–1
-  const alpha = Math.min(0.16, mag * 0.16);
+  const { momentumSign, change24h } = dayLog;
+  if (!momentumSign) return;
 
-  const color = isUp ? '#22c55e' : '#ef4444'; // green-500 / red-500
-  const gradient = ctx.createLinearGradient(0, 0, 760, 760);
-  gradient.addColorStop(0, color);
-  gradient.addColorStop(1, 'transparent');
+  const opacity = Math.min(0.30, (Math.abs(change24h) / 20) * 0.30);
+  const color = momentumSign > 0
+    ? `hsla(130, 70%, 45%, ${opacity})`
+    : `hsla(0, 70%, 45%, ${opacity})`;
 
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = gradient;
+  const grad = ctx.createLinearGradient(0, 760 * 0.3, 0, 760 * 0.7);
+  grad.addColorStop(0, 'hsla(0,0%,0%,0)');
+  grad.addColorStop(0.5, color);
+  grad.addColorStop(1, 'hsla(0,0%,0%,0)');
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 760, 760);
-
-  ctx.globalAlpha = 1;
 };
