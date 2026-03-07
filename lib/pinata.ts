@@ -64,6 +64,27 @@ export async function uploadMetadata(
 }
 
 /**
+ * Unpin a CID from Pinata, freeing storage. Best-effort — does not throw on failure.
+ * Accepts full ipfs:// URIs or bare CIDs.
+ */
+export async function unpinFromIPFS(
+  cidOrUri: string,
+  pinataJwt: string,
+): Promise<void> {
+  const cid = cidOrUri.replace('ipfs://', '').split('/')[0].trim();
+  if (!cid) return;
+
+  try {
+    await fetch(`https://api.pinata.cloud/pinning/unpin/${cid}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${pinataJwt}` },
+    });
+  } catch {
+    // best-effort — ignore failures
+  }
+}
+
+/**
  * Re-pin a CIDv1 file from Pinata's v3 storage to the public IPFS network.
  * 1. Searches v3 Files API to find the file by CID
  * 2. Downloads content via Pinata's signed URL

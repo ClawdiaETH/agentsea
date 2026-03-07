@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ethers } from 'ethers';
-import { uploadMetadata } from '@/lib/pinata';
+import { uploadMetadata, unpinFromIPFS } from '@/lib/pinata';
 import { getRegistry, setRegistry } from '@/lib/kv-registry';
 
 export const maxDuration = 300;
@@ -45,6 +45,10 @@ export async function GET(request: Request) {
     if (!hasBrokenMetadata && !isTarget) continue;
 
     try {
+      // Capture old CIDs before overwriting so we can unpin them after success
+      const oldImageUri = entry.ipfsImage;
+      const oldMetadataUri = entry.ipfsMetadata;
+
       const stats = entry.stats ?? {};
       const mcap = stats.mcap ?? 0;
       const change24h = stats.change24h ?? 0;
@@ -103,6 +107,14 @@ export async function GET(request: Request) {
 
       entry.ipfsMetadata = metadataUri;
       registryUpdated = true;
+
+      // Unpin old CIDs now that new ones are live (best-effort)
+      if (oldMetadataUri && oldMetadataUri !== metadataUri) {
+        await unpinFromIPFS(oldMetadataUri, pinataJwt);
+      }
+      if (oldImageUri && oldImageUri !== entry.ipfsImage) {
+        await unpinFromIPFS(oldImageUri.replace('https://gateway.pinata.cloud/ipfs/', 'ipfs://'), pinataJwt);
+      }
 
       results.push({
         tokenId: entry.tokenId,
