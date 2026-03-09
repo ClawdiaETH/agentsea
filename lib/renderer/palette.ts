@@ -44,7 +44,7 @@ interface PaletteDef {
 export const PALETTES: PaletteDef[] = [
   {
     id: 'INCIDENT', label: 'Incident', desc: 'High error rate (≥20 errors)',
-    check: (err) => err >= 20,
+    check: (err) => err >= 100,
     slots: [
       [0,15,90,100,45,65],
       [15,42,85,100,48,68],
