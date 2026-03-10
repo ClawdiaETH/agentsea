@@ -19,6 +19,18 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  9: {
+    commits: [
+      { sha: '914a544', message: 'fix: INCIDENT palette threshold back to 100 errors', repo: 'agentsea', timestamp: '' },
+      { sha: '510e9fb', message: 'fix: add Day 8 real data override for re-render', repo: 'agentsea', timestamp: '' },
+      { sha: 'ea14bd1', message: 'mint: Corrupt Memory Day 8 — Golden Hour', repo: 'agentsea', timestamp: '' },
+      { sha: '54392bb', message: 'feat: renderer v3 — full port of original: pixel sorting, ridges, radial sky, vignette, 12 original palettes', repo: 'agentsea', timestamp: '' },
+      { sha: '9fda85a', message: 'fix: add Day 7 real data override for re-render', repo: 'agentsea', timestamp: '' },
+      { sha: '00201b9', message: 'fix: replace missing store-secret.sh with bagman_wrapper.py in auto-refresh', repo: 'clawd', timestamp: '' },
+    ],
+    reposActive: ['agentsea', 'clawd'],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
   8: {
     commits: [
       { sha: '92e1c8b', message: 'fix: add Day 7 real data override for re-render', repo: 'agentsea', timestamp: '' },
