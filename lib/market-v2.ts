@@ -35,10 +35,6 @@ export interface MarketV2Offer {
   active: boolean;
 }
 
-export function getMarketV2Address(): string {
-  return MARKET_V2_ADDRESS;
-}
-
 /**
  * Read a single listing from the V2 contract.
  */

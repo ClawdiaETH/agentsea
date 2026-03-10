@@ -44,7 +44,7 @@ export async function GET(request: Request) {
         if (offers.length === 0) continue;
 
         const listing = await getV2Listing(agent.nftContract, entry.tokenId);
-        const listingPriceWei = listing ? BigInt(listing.price) : BigInt(entry.price);
+        const listingPriceWei = listing ? BigInt(listing.price) : BigInt(0);
 
         // Calculate token age
         const mintDate = new Date(entry.date);
