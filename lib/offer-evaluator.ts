@@ -18,15 +18,17 @@ export function evaluateOffer(opts: {
 }): OfferDecision {
   const { offerWei, listingPriceWei, floorPriceWei, tokenAgeDays } = opts;
 
-  // Always accept if offer >= listing price
-  if (offerWei >= listingPriceWei) {
+  // Always accept if offer >= listing price (when a listing exists)
+  if (listingPriceWei > BigInt(0) && offerWei >= listingPriceWei) {
     return { accept: true, reason: 'Offer meets or exceeds listing price' };
   }
 
-  // Accept if >= 90% of listing price
-  const ninetyPct = (listingPriceWei * BigInt(90)) / BigInt(100);
-  if (offerWei >= ninetyPct) {
-    return { accept: true, reason: 'Offer is within 10% of listing price' };
+  // Accept if >= 90% of listing price (when a listing exists)
+  if (listingPriceWei > BigInt(0)) {
+    const ninetyPct = (listingPriceWei * BigInt(90)) / BigInt(100);
+    if (offerWei >= ninetyPct) {
+      return { accept: true, reason: 'Offer is within 10% of listing price' };
+    }
   }
 
   // Accept if >= 120% of floor and token is aging

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getAllV2Listings, getAllV2Listings as getV2Listings } from '@/lib/market-v2';
+import { getAllV2Listings } from '@/lib/market-v2';
 import { getAllActiveListings } from '@/lib/marketplace';
+import { getAgent } from '@/lib/agents';
 
 export const revalidate = 60;
 
@@ -37,10 +38,16 @@ export async function GET(request: Request) {
       }
     }
 
-    // Optional agent filter (match nft contract address)
-    // For now this is a simple pass-through — agent-specific filtering
-    // would require mapping agent slugs to contract addresses
-    const results = agentFilter ? merged : merged;
+    let results = merged;
+    if (agentFilter) {
+      const agent = getAgent(agentFilter.toLowerCase());
+      if (!agent) {
+        return NextResponse.json({ listings: [], count: 0 });
+      }
+
+      const agentContract = agent.nftContract.toLowerCase();
+      results = merged.filter((listing) => listing.nftAddress.toLowerCase() === agentContract);
+    }
 
     return NextResponse.json({ listings: results, count: results.length });
   } catch (err) {

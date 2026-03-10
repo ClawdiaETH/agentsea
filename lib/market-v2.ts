@@ -179,24 +179,34 @@ export async function getOffersForToken(
       rpcGetLogs({ address: MARKET_V2_ADDRESS, topics: [OFFER_ACCEPTED_TOPIC, paddedNft, paddedId], fromBlock }),
     ]);
 
-    // Collect unique offerers from OfferMade
-    const offerers = new Set<string>();
-    for (const log of madeLogs) {
-      if (log.topics.length >= 4) {
-        offerers.add('0x' + log.topics[3].slice(26));
+    // Track the latest offer-related event per offerer (made vs removed).
+    const latestByOfferer = new Map<string, { blockNumber: bigint; logIndex: bigint; made: boolean }>();
+    const offerEvents = [
+      ...madeLogs.map((log) => ({ log, made: true })),
+      ...cancelledLogs.map((log) => ({ log, made: false })),
+      ...acceptedLogs.map((log) => ({ log, made: false })),
+    ];
+
+    for (const { log, made } of offerEvents) {
+      if (log.topics.length < 4) continue;
+      const offerer = '0x' + log.topics[3].slice(26);
+      const blockNumber = BigInt(log.blockNumber);
+      const logIndex = BigInt(log.logIndex);
+      const prev = latestByOfferer.get(offerer);
+
+      if (
+        !prev ||
+        blockNumber > prev.blockNumber ||
+        (blockNumber === prev.blockNumber && logIndex > prev.logIndex)
+      ) {
+        latestByOfferer.set(offerer, { blockNumber, logIndex, made });
       }
     }
 
-    // Remove cancelled/accepted offerers
-    const removedOfferers = new Set<string>();
-    for (const log of [...cancelledLogs, ...acceptedLogs]) {
-      if (log.topics.length >= 4) {
-        removedOfferers.add('0x' + log.topics[3].slice(26));
-      }
-    }
-
-    // Validate remaining offers onchain
-    const activeOfferers = [...offerers].filter((o) => !removedOfferers.has(o));
+    // Validate offerers whose latest event is OfferMade.
+    const activeOfferers = Array.from(latestByOfferer.entries())
+      .filter(([, state]) => state.made)
+      .map(([offerer]) => offerer);
     const results = await Promise.all(
       activeOfferers.map((offerer) => getV2Offer(nftAddress, tokenId, offerer)),
     );

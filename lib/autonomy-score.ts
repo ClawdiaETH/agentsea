@@ -72,7 +72,7 @@ function scoreMarketplaceActions(
   provenanceEvents: ProvenanceEvent[],
 ): number {
   const marketActions = provenanceEvents.filter(
-    (e) => e.type === 'sale' || e.type === 'bid' || e.type === 'acquire',
+    (e) => e.type === 'list' || e.type === 'sale' || e.type === 'bid' || e.type === 'acquire',
   );
 
   if (marketActions.length === 0) return 0;

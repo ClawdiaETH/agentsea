@@ -9,6 +9,7 @@ interface ActivityFeedProps {
 
 const EVENT_ICONS: Record<string, string> = {
   mint: 'M',
+  list: 'L',
   sale: 'S',
   bid: 'B',
   acquire: 'A',
@@ -18,6 +19,7 @@ const EVENT_ICONS: Record<string, string> = {
 
 const EVENT_COLORS: Record<string, string> = {
   mint: 'border-emerald-700 text-emerald-400',
+  list: 'border-cyan-700 text-cyan-400',
   sale: 'border-blue-700 text-blue-400',
   bid: 'border-yellow-700 text-yellow-400',
   acquire: 'border-purple-700 text-purple-400',
@@ -45,6 +47,13 @@ function EventDescription({ event }: { event: ProvenanceEvent }) {
       return (
         <span>
           Minted <span className="text-zinc-200">#{event.tokenId}</span>
+          {event.priceEth && <span className="text-zinc-500"> at {event.priceEth} ETH</span>}
+        </span>
+      );
+    case 'list':
+      return (
+        <span>
+          Listed <span className="text-zinc-200">#{event.tokenId}</span>
           {event.priceEth && <span className="text-zinc-500"> at {event.priceEth} ETH</span>}
         </span>
       );

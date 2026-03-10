@@ -1,5 +1,6 @@
 export type ProvenanceEventType =
   | 'mint'
+  | 'list'
   | 'sale'
   | 'bid'
   | 'acquire'

@@ -24,7 +24,7 @@ const ERC721_ABI = [
 export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
     await addProvenanceEvent({
       id: `${agentSlug}:list:${tokenId}:${Date.now()}`,
       agent: agentSlug,
-      type: 'mint', // reuse mint type for listing action
+      type: 'list',
       initiatedBy: 'agent',
       timestamp: new Date().toISOString(),
       tokenId: Number(tokenId),
