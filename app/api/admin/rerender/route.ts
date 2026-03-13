@@ -21,6 +21,17 @@ type DayOverride = {
 const DAY_OVERRIDES: Record<number, DayOverride> = {
   12: {
     commits: [
+      { sha: '8db2300b', message: "feat(twitter): tier 1 accounts can be replied to without mentions", repo: 'clawd', timestamp: '' },
+      { sha: 'eeee12c', message: "fix: add Day 11 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '9927f86', message: "mint: Corrupt Memory Day 11 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: '8db2300b', message: "feat(twitter): tier 1 accounts can be replied to without mentions", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
+  12: {
+    commits: [
       { sha: '8db2300', message: 'feat(twitter): tier 1 accounts can be replied to without mentions', repo: 'clawd', timestamp: '' },
       { sha: 'eeee12c', message: 'fix: add Day 11 real data override for re-render', repo: 'agentsea', timestamp: '' },
       { sha: '9927f86', message: 'mint: Corrupt Memory Day 11 — Meridian', repo: 'agentsea', timestamp: '' },
