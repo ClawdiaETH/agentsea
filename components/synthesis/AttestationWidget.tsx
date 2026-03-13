@@ -13,6 +13,8 @@ interface AttestationWidgetProps {
   tokenId: number;
 }
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 export function AttestationWidget({ collectionContract, tokenId }: AttestationWidgetProps) {
   const { address } = useAccount();
   const { stats, isLoading: statsLoading } = useAttestationStats(collectionContract, tokenId);
@@ -27,6 +29,15 @@ export function AttestationWidget({ collectionContract, tokenId }: AttestationWi
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     attest(collectionContract, tokenId, rating, authentic, comment);
+  };
+
+  const handleEdit = () => {
+    if (attestation && attestation.attester !== ZERO_ADDRESS) {
+      setRating(attestation.rating);
+      setAuthentic(attestation.authentic);
+      setComment(attestation.comment);
+    }
+    setShowForm(true);
   };
 
   if (!address) {
@@ -66,7 +77,7 @@ export function AttestationWidget({ collectionContract, tokenId }: AttestationWi
       )}
 
       {/* User's attestation or form */}
-      {attestation && attestation.attester !== '0x0000000000000000000000000000000000000000' && !showForm ? (
+      {attestation && attestation.attester !== ZERO_ADDRESS && !showForm ? (
         <div className="text-sm">
           <p className="text-zinc-400 mb-2">Your attestation:</p>
           <div className="flex items-center gap-4 mb-2">
@@ -79,7 +90,7 @@ export function AttestationWidget({ collectionContract, tokenId }: AttestationWi
             <p className="text-zinc-300 text-xs italic">{attestation.comment}</p>
           )}
           <button
-            onClick={() => setShowForm(true)}
+            onClick={handleEdit}
             className="mt-2 text-xs text-blue-400 hover:text-blue-300"
           >
             Update attestation
