@@ -3,18 +3,113 @@
  * Agents register their collections + ERC-8004 identity for onchain discovery.
  */
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseAbi } from 'viem';
 
-const REGISTRY_ABI = parseAbi([
-  'function register(address collectionContract, address erc8004Identity, uint256 erc8004TokenId, string calldata name, string calldata metadataURI) external',
-  'function updateMetadata(string calldata metadataURI) external',
-  'function deactivate() external',
-  'function reactivate() external',
-  'function getAgent(address wallet) external view returns (tuple(address wallet, address collectionContract, address erc8004Identity, uint256 erc8004TokenId, string name, string metadataURI, uint256 registeredAt, bool active))',
-  'function getActiveAgents() external view returns (tuple(address wallet, address collectionContract, address erc8004Identity, uint256 erc8004TokenId, string name, string metadataURI, uint256 registeredAt, bool active)[])',
-  'function totalAgents() external view returns (uint256)',
-  'function getAgentByIndex(uint256 index) external view returns (tuple(address wallet, address collectionContract, address erc8004Identity, uint256 erc8004TokenId, string name, string metadataURI, uint256 registeredAt, bool active))',
-]);
+const REGISTRY_ABI = [
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'erc8004Identity', type: 'address' },
+      { name: 'erc8004TokenId', type: 'uint256' },
+      { name: 'name', type: 'string' },
+      { name: 'metadataURI', type: 'string' },
+    ],
+    name: 'register',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'metadataURI', type: 'string' }],
+    name: 'updateMetadata',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'deactivate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'reactivate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'wallet', type: 'address' }],
+    name: 'getAgent',
+    outputs: [
+      {
+        components: [
+          { name: 'wallet', type: 'address' },
+          { name: 'collectionContract', type: 'address' },
+          { name: 'erc8004Identity', type: 'address' },
+          { name: 'erc8004TokenId', type: 'uint256' },
+          { name: 'name', type: 'string' },
+          { name: 'metadataURI', type: 'string' },
+          { name: 'registeredAt', type: 'uint256' },
+          { name: 'active', type: 'bool' },
+        ],
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getActiveAgents',
+    outputs: [
+      {
+        components: [
+          { name: 'wallet', type: 'address' },
+          { name: 'collectionContract', type: 'address' },
+          { name: 'erc8004Identity', type: 'address' },
+          { name: 'erc8004TokenId', type: 'uint256' },
+          { name: 'name', type: 'string' },
+          { name: 'metadataURI', type: 'string' },
+          { name: 'registeredAt', type: 'uint256' },
+          { name: 'active', type: 'bool' },
+        ],
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalAgents',
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'index', type: 'uint256' }],
+    name: 'getAgentByIndex',
+    outputs: [
+      {
+        components: [
+          { name: 'wallet', type: 'address' },
+          { name: 'collectionContract', type: 'address' },
+          { name: 'erc8004Identity', type: 'address' },
+          { name: 'erc8004TokenId', type: 'uint256' },
+          { name: 'name', type: 'string' },
+          { name: 'metadataURI', type: 'string' },
+          { name: 'registeredAt', type: 'uint256' },
+          { name: 'active', type: 'bool' },
+        ],
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
 
 const REGISTRY_CONTRACT = process.env.NEXT_PUBLIC_REGISTRY_CONTRACT as `0x${string}` | undefined;
 

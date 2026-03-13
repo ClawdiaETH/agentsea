@@ -3,15 +3,83 @@
  * Lets collectors attest to NFT quality/authenticity onchain.
  */
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseAbi } from 'viem';
 
-const ATTESTATION_ABI = parseAbi([
-  'function attest(address collectionContract, uint256 tokenId, uint8 rating, bool authentic, string calldata comment) external',
-  'function getStats(address collectionContract, uint256 tokenId) external view returns (uint256 count, uint256 avgRating, uint256 authenticityPct)',
-  'function getAttestation(address collectionContract, uint256 tokenId, address attester) external view returns (tuple(address attester, uint8 rating, bool authentic, string comment, uint256 timestamp))',
-  'function hasAttested(address collectionContract, uint256 tokenId, address attester) external view returns (bool)',
-  'function getCollectionReputation(address collectionContract, uint256 maxTokenId) external view returns (uint256 totalAttestations, uint256 avgRating, uint256 avgAuthenticity)',
-]);
+const ATTESTATION_ABI = [
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+      { name: 'rating', type: 'uint8' },
+      { name: 'authentic', type: 'bool' },
+      { name: 'comment', type: 'string' },
+    ],
+    name: 'attest',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    name: 'getStats',
+    outputs: [
+      { name: 'count', type: 'uint256' },
+      { name: 'avgRating', type: 'uint256' },
+      { name: 'authenticityPct', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+      { name: 'attester', type: 'address' },
+    ],
+    name: 'getAttestation',
+    outputs: [
+      {
+        components: [
+          { name: 'attester', type: 'address' },
+          { name: 'rating', type: 'uint8' },
+          { name: 'authentic', type: 'bool' },
+          { name: 'comment', type: 'string' },
+          { name: 'timestamp', type: 'uint256' },
+        ],
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+      { name: 'attester', type: 'address' },
+    ],
+    name: 'hasAttested',
+    outputs: [{ type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'maxTokenId', type: 'uint256' },
+    ],
+    name: 'getCollectionReputation',
+    outputs: [
+      { name: 'totalAttestations', type: 'uint256' },
+      { name: 'avgRating', type: 'uint256' },
+      { name: 'avgAuthenticity', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
 
 const ATTESTATION_CONTRACT = process.env.NEXT_PUBLIC_ATTESTATION_CONTRACT as `0x${string}` | undefined;
 

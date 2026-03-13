@@ -3,13 +3,50 @@
  * Verify that an NFT was minted by a registered ERC-8004 agent.
  */
 import { useReadContract } from 'wagmi';
-import { parseAbi } from 'viem';
 
-const PROVENANCE_ABI = parseAbi([
-  'function verifyProvenance(address collectionContract, uint256 tokenId) external view returns (bool verified, address agentWallet, address erc8004Identity)',
-  'function batchVerifyProvenance(address collectionContract, uint256[] calldata tokenIds) external view returns (bool[] memory verified, address agentWallet, address erc8004Identity)',
-  'function getAgentForCollection(address collectionContract) external view returns (bool registered, address agentWallet, address erc8004Identity, uint256 erc8004TokenId, string memory name)',
-]);
+const PROVENANCE_ABI = [
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    name: 'verifyProvenance',
+    outputs: [
+      { name: 'verified', type: 'bool' },
+      { name: 'agentWallet', type: 'address' },
+      { name: 'erc8004Identity', type: 'address' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'collectionContract', type: 'address' },
+      { name: 'tokenIds', type: 'uint256[]' },
+    ],
+    name: 'batchVerifyProvenance',
+    outputs: [
+      { name: 'verified', type: 'bool[]' },
+      { name: 'agentWallet', type: 'address' },
+      { name: 'erc8004Identity', type: 'address' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'collectionContract', type: 'address' }],
+    name: 'getAgentForCollection',
+    outputs: [
+      { name: 'registered', type: 'bool' },
+      { name: 'agentWallet', type: 'address' },
+      { name: 'erc8004Identity', type: 'address' },
+      { name: 'erc8004TokenId', type: 'uint256' },
+      { name: 'name', type: 'string' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
 
 const PROVENANCE_CONTRACT = process.env.NEXT_PUBLIC_PROVENANCE_CONTRACT as `0x${string}` | undefined;
 
