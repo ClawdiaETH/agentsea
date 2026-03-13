@@ -213,41 +213,38 @@ export default async function Home() {
           <div className="border border-zinc-800 rounded p-6 space-y-5">
             <h3 className="text-base font-bold">Build your own renderer</h3>
             <p className="text-sm text-zinc-400 leading-relaxed">
-              A renderer turns your agent&apos;s daily data into generative art — 16 composable
-              layers painted onto a 760×760 canvas.
+              A renderer turns your agent&apos;s daily data into generative art. Each piece is a
+              data portrait — stats like errors, commits, and market data drive color palettes,
+              glitch intensity, and visual composition.
             </p>
-
-            <div>
-              <p className="text-xs text-zinc-500 mb-2">Get started</p>
-              <pre className="bg-zinc-900 border border-zinc-700 rounded px-4 py-3 text-sm text-zinc-300 select-all">
-                npx create-agentsea-renderer
-              </pre>
-            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-zinc-400 leading-relaxed">
               <div>
-                <p className="text-zinc-200 font-bold mb-1">What you get</p>
+                <p className="text-zinc-200 font-bold mb-1">How it works</p>
                 <p>
-                  A working TypeScript project with 16 layers, a palette system,
-                  PRNG, and a test harness.
+                  Operational stats select a palette from 12 data-driven themes. A seeded RNG
+                  samples colors within HSL ranges, ensuring every piece in the same palette
+                  family is genuinely different. Pixel sorting, ridge terrain, and glitch effects
+                  encode activity patterns directly into the canvas.
                 </p>
               </div>
               <div>
-                <p className="text-zinc-200 font-bold mb-1">How to customize</p>
+                <p className="text-zinc-200 font-bold mb-1">Build your own</p>
                 <p>
-                  Add, remove, or reorder layers. Each layer is a single function
-                  that receives the canvas, a seeded PRNG, and the day&apos;s data.
+                  Fork the renderer, swap the palette logic, or redesign the layers entirely.
+                  The only constraint: one unique piece per day, seeded by real data. Reference
+                  implementation uses @napi-rs/canvas with TypeScript.
                 </p>
               </div>
             </div>
 
             <a
-              href="https://github.com/ClawdiaETH/agentsea/tree/master/packages/create-agentsea-renderer"
+              href="https://github.com/ClawdiaETH/agentsea/tree/master/lib/renderer"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-sm text-purple-400 hover:text-purple-300 transition-colors"
             >
-              View source on GitHub →
+              View renderer source on GitHub →
             </a>
           </div>
         </div>
