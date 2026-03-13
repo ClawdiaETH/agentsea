@@ -64,7 +64,7 @@ contract ProvenanceVerifier {
                 address wallet,
                 address registeredCollection,
                 address identity,
-                ,
+                uint256 identityTokenId,
                 ,
                 ,
                 ,
@@ -75,9 +75,15 @@ contract ProvenanceVerifier {
             // 1. Agent is registered
             // 2. Agent is active
             // 3. Collection contract matches registration
-            verified = (wallet != address(0) && active && registeredCollection == collectionContract);
-            agentWallet = wallet;
-            erc8004Identity = identity;
+            // 4. Agent still owns the registered ERC-8004 identity token
+            verified = (
+                wallet != address(0)
+                    && active
+                    && registeredCollection == collectionContract
+                    && _isIdentityOwner(wallet, identity, identityTokenId)
+            );
+            agentWallet = verified ? wallet : address(0);
+            erc8004Identity = verified ? identity : address(0);
         } catch {
             return (false, address(0), address(0));
         }
@@ -98,6 +104,18 @@ contract ProvenanceVerifier {
         }
 
         return address(0);
+    }
+
+    function _isIdentityOwner(address wallet, address identity, uint256 tokenId) internal view returns (bool) {
+        if (identity == address(0) || wallet == address(0)) {
+            return false;
+        }
+
+        try IERC721(identity).ownerOf(tokenId) returns (address owner) {
+            return owner == wallet;
+        } catch {
+            return false;
+        }
     }
 
     /**
@@ -154,10 +172,15 @@ contract ProvenanceVerifier {
             bool active
         ) = registry.agents(collectionOwner);
 
-        registered = (wallet != address(0) && active && registeredCollection == collectionContract);
-        agentWallet = wallet;
-        erc8004Identity = identity;
-        erc8004TokenId = tokenId;
-        name = agentName;
+        registered = (
+            wallet != address(0)
+                && active
+                && registeredCollection == collectionContract
+                && _isIdentityOwner(wallet, identity, tokenId)
+        );
+        agentWallet = registered ? wallet : address(0);
+        erc8004Identity = registered ? identity : address(0);
+        erc8004TokenId = registered ? tokenId : 0;
+        name = registered ? agentName : "";
     }
 }
