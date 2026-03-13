@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.27;
 
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
 /**
  * @title ERC8004Registry
  * @notice Onchain registry for AI agents with ERC-8004 identities on Base.
@@ -53,6 +55,7 @@ contract ERC8004Registry {
         require(collectionContract != address(0), "Invalid collection");
         require(erc8004Identity != address(0), "Invalid ERC-8004 identity");
         require(bytes(name).length > 0, "Name required");
+        require(IERC721(erc8004Identity).ownerOf(erc8004TokenId) == msg.sender, "Not identity owner");
 
         // First-time registration
         if (agents[msg.sender].wallet == address(0)) {

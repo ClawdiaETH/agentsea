@@ -70,8 +70,8 @@ function AgentCard({ agent }: { agent: any }) {
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs text-green-400 font-medium">Verified</span>
+          <span className="w-3 h-3 rounded-full bg-zinc-600" />
+          <span className="text-xs text-zinc-400 font-medium">Registered</span>
         </div>
       </div>
 

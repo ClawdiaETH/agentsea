@@ -20,7 +20,7 @@ export function AttestationWidget({ collectionContract, tokenId }: AttestationWi
   const { attest, isPending, isConfirming, isSuccess } = useAttest();
 
   const [rating, setRating] = useState(attestation?.rating || 5);
-  const [authentic, setAuthentic] = useState(attestation?.authentic || true);
+  const [authentic, setAuthentic] = useState(attestation?.authentic ?? true);
   const [comment, setComment] = useState(attestation?.comment || '');
   const [showForm, setShowForm] = useState(false);
 
