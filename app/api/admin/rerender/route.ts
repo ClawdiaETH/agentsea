@@ -19,6 +19,21 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  13: {
+    commits: [
+      { sha: 'bb80715', message: 'docs(bitnet): add benchmark plan for 1-bit LLM evaluation', repo: 'clawd', timestamp: '' },
+      { sha: '9773a66', message: 'feat(synthesis): document next steps and deployment checklist', repo: 'clawd', timestamp: '' },
+      { sha: '9d52bc2', message: 'feat(synthesis): register for hackathon, document strategy for agentsea.io', repo: 'clawd', timestamp: '' },
+      { sha: 'fe52b16', message: 'feat(local-models): upgrade all scripts to qwen3:30b-a3b', repo: 'clawd', timestamp: '' },
+      { sha: '50bba14', message: 'feat(synthesis): Agents that trust - onchain registry + attestations', repo: 'agentsea', timestamp: '' },
+      { sha: 'bf7488c', message: 'feat: add npx create-agentsea-renderer command to homepage', repo: 'agentsea', timestamp: '' },
+      { sha: '3678d9d', message: 'fix: remove duplicate day 12 override', repo: 'agentsea', timestamp: '' },
+      { sha: '1ea9128', message: 'fix: update homepage renderer description to reflect v3 architecture', repo: 'agentsea', timestamp: '' },
+      { sha: 'ef5c447', message: 'feat: create-agentsea-renderer scaffolding tool', repo: 'create-agentsea-renderer', timestamp: '' },
+    ],
+    reposActive: ['clawd', 'agentsea', 'create-agentsea-renderer'],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
   12: {
     commits: [
       { sha: '8db2300b', message: "feat(twitter): tier 1 accounts can be replied to without mentions", repo: 'clawd', timestamp: '' },
