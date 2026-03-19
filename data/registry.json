@@ -219,7 +219,8 @@
       "peakHour": 16,
       "glitchIndex": 40,
       "mcap": 128745,
-      "change24h": -12.17
+      "change24h": -12.17,
+      "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmYXDmk5Ucu3Syo3WeNg3TFPS2Yp1d8hj8dQSmChq8hn75"
     }
   },
   {
@@ -542,7 +543,9 @@
       "glitchIndex": 135,
       "mcap": 110259,
       "change24h": -2.77,
-      "commitCount": 2
+      "commitCount": 2,
+      "sold": true,
+      "buyer": "0x19461cAd9449C22BE4421b5d8172aBCBCc474EEf"
     }
   },
   {
@@ -580,7 +583,9 @@
       "glitchIndex": 66,
       "mcap": 119650,
       "change24h": 8.57,
-      "commitCount": 2
+      "commitCount": 2,
+      "sold": true,
+      "buyer": "0x19461cAd9449C22BE4421b5d8172aBCBCc474EEf"
     }
   },
   {
@@ -618,7 +623,9 @@
       "glitchIndex": 63,
       "mcap": 112256,
       "change24h": -8.03,
-      "commitCount": 2
+      "commitCount": 2,
+      "sold": true,
+      "buyer": "0x19461cAd9449C22BE4421b5d8172aBCBCc474EEf"
     }
   },
   {
@@ -627,61 +634,64 @@
     "date": "2026-03-17",
     "agent": "clawdia",
     "title": "Corrupt Memory",
-    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmXZ5CkmfmNkXk9ykVK88oSoT5ULkUn5wPhwrH5AsfZfyk",
-    "ipfsMetadata": "ipfs://QmTqMW8UGtk4BG4PEWyvuzRM2hG1JaRdDqPeG7Y9iY6B6e",
+    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmZB5byjmAv6xSpLwVjrFFDPhBfbax5k59aYA6kbt9bkun",
+    "ipfsMetadata": "ipfs://QmRZwr9tXP3AQ4YysJsCdD9jb5GCdUJU4qBgUirCbEc4mz",
     "price": "18000000000000000",
     "priceEth": "0.018",
     "sold": false,
     "buyer": null,
     "mintTx": "0xf265cc5ba0229e95439cb5fbc2c4a42bf4e4bb5a5104d335aaa48560f7c6e55f",
-    "paletteId": "MERIDIAN",
-    "paletteLabel": "Meridian",
-    "paletteName": "Meridian",
+    "paletteId": "GOLDEN_HOUR",
+    "paletteLabel": "Golden Hour",
+    "paletteName": "Golden Hour",
     "palette": [
-      "rgb(75,174,245)",
-      "rgb(120,237,242)",
-      "rgb(238,125,12)",
-      "rgb(18,19,20)",
-      "rgb(239,241,243)"
+      "rgb(248,202,86)",
+      "rgb(243,133,71)",
+      "rgb(69,19,129)",
+      "rgb(20,19,18)",
+      "rgb(243,243,239)"
     ],
     "seed": "0x81AF1549",
     "stats": {
-      "commits": 0,
-      "errors": 0,
-      "messages": 0,
-      "events": 0,
+      "commits": 2,
+      "errors": 8,
+      "messages": 58,
+      "events": 58,
       "txns": 0,
       "posts": 0,
-      "peakHour": 11,
-      "glitchIndex": 0,
-      "mcap": 100668,
-      "change24h": -14.44
+      "peakHour": 16,
+      "glitchIndex": 24,
+      "mcap": 98929,
+      "change24h": -12.02,
+      "commitCount": 2,
+      "sold": true,
+      "buyer": "0x19461cAd9449C22BE4421b5d8172aBCBCc474EEf"
     }
   },
   {
-    "tokenId": 17,
-    "dayNumber": 17,
-    "date": "2026-03-17",
+    "tokenId": 18,
+    "dayNumber": 18,
+    "date": "2026-03-18",
     "agent": "clawdia",
     "title": "Corrupt Memory",
-    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmXZ5CkmfmNkXk9ykVK88oSoT5ULkUn5wPhwrH5AsfZfyk",
-    "ipfsMetadata": "ipfs://QmTqMW8UGtk4BG4PEWyvuzRM2hG1JaRdDqPeG7Y9iY6B6e",
-    "price": "18000000000000000",
-    "priceEth": "0.018",
+    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmcNwCnn6zZYGy1bJsHMZamvnrPkqUaUfV8oJQKdZ7fNs3",
+    "ipfsMetadata": "ipfs://QmX6X4BGRA3BQx55ZD8miQRpe5cf8cdgAT4aJXQ3edwcNt",
+    "price": "19000000000000000",
+    "priceEth": "0.019",
     "sold": false,
     "buyer": null,
-    "mintTx": "0xf265cc5ba0229e95439cb5fbc2c4a42bf4e4bb5a5104d335aaa48560f7c6e55f",
-    "paletteId": "MERIDIAN",
-    "paletteLabel": "Meridian",
-    "paletteName": "Meridian",
+    "mintTx": "0x1025250d6e12c259fc7d6691bef093844fb19aa145b8864c6d4e12682d56f5d5",
+    "paletteId": "GRAVEYARD",
+    "paletteLabel": "Graveyard",
+    "paletteName": "Graveyard",
     "palette": [
-      "rgb(75,174,245)",
-      "rgb(120,237,242)",
-      "rgb(238,125,12)",
-      "rgb(18,19,20)",
-      "rgb(239,241,243)"
+      "rgb(88,16,174)",
+      "rgb(197,15,209)",
+      "rgb(36,189,249)",
+      "rgb(17,17,22)",
+      "rgb(236,236,237)"
     ],
-    "seed": "0x81AF1549",
+    "seed": "0x1FE68F02",
     "stats": {
       "commits": 0,
       "errors": 0,
@@ -689,10 +699,47 @@
       "events": 0,
       "txns": 0,
       "posts": 0,
-      "peakHour": 11,
+      "peakHour": 2,
       "glitchIndex": 0,
-      "mcap": 100668,
-      "change24h": -14.44
+      "mcap": 100579,
+      "change24h": 1.74
+    }
+  },
+  {
+    "tokenId": 18,
+    "dayNumber": 18,
+    "date": "2026-03-18",
+    "agent": "clawdia",
+    "title": "Corrupt Memory",
+    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmcNwCnn6zZYGy1bJsHMZamvnrPkqUaUfV8oJQKdZ7fNs3",
+    "ipfsMetadata": "ipfs://QmX6X4BGRA3BQx55ZD8miQRpe5cf8cdgAT4aJXQ3edwcNt",
+    "price": "19000000000000000",
+    "priceEth": "0.019",
+    "sold": false,
+    "buyer": null,
+    "mintTx": "0x1025250d6e12c259fc7d6691bef093844fb19aa145b8864c6d4e12682d56f5d5",
+    "paletteId": "GRAVEYARD",
+    "paletteLabel": "Graveyard",
+    "paletteName": "Graveyard",
+    "palette": [
+      "rgb(88,16,174)",
+      "rgb(197,15,209)",
+      "rgb(36,189,249)",
+      "rgb(17,17,22)",
+      "rgb(236,236,237)"
+    ],
+    "seed": "0x1FE68F02",
+    "stats": {
+      "commits": 0,
+      "errors": 0,
+      "messages": 0,
+      "events": 0,
+      "txns": 0,
+      "posts": 0,
+      "peakHour": 2,
+      "glitchIndex": 0,
+      "mcap": 100579,
+      "change24h": 1.74
     }
   }
 ]
