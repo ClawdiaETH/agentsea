@@ -19,6 +19,23 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  23: {
+    commits: [
+      { sha: '758335ce', message: "lessons: document compound-nightly LLM silent timeout pattern (urllib 120s too short)", repo: 'clawd', timestamp: '' },
+      { sha: 'da30bd31', message: "backlog: archive expired March-19 deadline items, update last-updated note", repo: 'clawd', timestamp: '' },
+      { sha: '43447035', message: "fix(compound-nightly): increase urllib timeout 120s→300s, SIGALRM 150s→360s", repo: 'clawd', timestamp: '' },
+      { sha: '4f4b91ee', message: "fix: compound-nightly SIGALRM 90s→150s so urllib 120s timeout completes; fix stale model label in print", repo: 'clawd', timestamp: '' },
+      { sha: '8166eb5', message: "fix: add Day 22 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: 'e2de8cb', message: "mint: Corrupt Memory Day 22 — Golden Hour", repo: 'agentsea', timestamp: '' },
+      { sha: '758335ce', message: "lessons: document compound-nightly LLM silent timeout pattern (urllib 120s too short)", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: 'da30bd31', message: "backlog: archive expired March-19 deadline items, update last-updated note", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '43447035', message: "fix(compound-nightly): increase urllib timeout 120s→300s, SIGALRM 150s→360s", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '4f4b91ee', message: "fix: compound-nightly SIGALRM 90s→150s so urllib 120s timeout completes; fix stale model label in print", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   22: {
     commits: [
       { sha: '407b23c', message: "fix: add Day 21 real data override for re-render", repo: 'agentsea', timestamp: '' },
