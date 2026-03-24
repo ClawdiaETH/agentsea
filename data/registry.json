@@ -741,7 +741,8 @@
       "glitchIndex": 54,
       "mcap": 95930,
       "change24h": 0.42,
-      "commitCount": 2
+      "commitCount": 2,
+      "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmVC9HCJHzdEiSv5DX49ZJdHft4a9T278MRUSvwAJY61v4"
     }
   },
   {
@@ -779,7 +780,8 @@
       "glitchIndex": 75,
       "mcap": 95036,
       "change24h": -0.61,
-      "commitCount": 3
+      "commitCount": 3,
+      "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmQUu8vzMBvza6ErFS7qENSRPYQ668xSkZDCRYTewpQovQ"
     }
   },
   {
@@ -817,7 +819,8 @@
       "glitchIndex": 96,
       "mcap": 91306,
       "change24h": -3.5,
-      "commitCount": 2
+      "commitCount": 2,
+      "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmaYN7mGkxymLJZvF3bd8LxgcP1gpWuLh9tLrqyJtkvzcy"
     }
   },
   {
@@ -826,8 +829,8 @@
     "date": "2026-03-22",
     "agent": "clawdia",
     "title": "Corrupt Memory",
-    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmdzfUV5gs5od28yb55A6PNyTfvaQjyDZ8rNDbzYSbgCmf",
-    "ipfsMetadata": "ipfs://QmNyrz4SpCobQ3iCHbN2ygy4b67LKsmAgTfzLT3XGUpxRt",
+    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmZwMV3PJWgLSgz75FUua9Ypi7tWQpic1qj9FUYZVbL56L",
+    "ipfsMetadata": "ipfs://QmeGVtov7xtdkWVvYE5NtdQtYPsNT7Je1FFQCgZrhJzrcA",
     "price": "23000000000000000",
     "priceEth": "0.023",
     "sold": false,
@@ -845,42 +848,43 @@
     ],
     "seed": "0x98C475E6",
     "stats": {
-      "commits": 0,
-      "errors": 0,
-      "messages": 0,
-      "events": 0,
+      "commits": 6,
+      "errors": 39,
+      "messages": 46,
+      "events": 46,
       "txns": 0,
       "posts": 0,
       "peakHour": 16,
-      "glitchIndex": 0,
+      "glitchIndex": 117,
       "mcap": 90272,
-      "change24h": -1.07
+      "change24h": -1.18,
+      "commitCount": 6
     }
   },
   {
-    "tokenId": 22,
-    "dayNumber": 22,
-    "date": "2026-03-22",
+    "tokenId": 23,
+    "dayNumber": 23,
+    "date": "2026-03-23",
     "agent": "clawdia",
     "title": "Corrupt Memory",
-    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmdzfUV5gs5od28yb55A6PNyTfvaQjyDZ8rNDbzYSbgCmf",
-    "ipfsMetadata": "ipfs://QmNyrz4SpCobQ3iCHbN2ygy4b67LKsmAgTfzLT3XGUpxRt",
-    "price": "23000000000000000",
-    "priceEth": "0.023",
+    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmTFBREuCf26iQPVkJiMRsaesFZRFFjp213tJnjWr5ctqH",
+    "ipfsMetadata": "ipfs://QmXAZxDs4ryPXaK4xngfrYAyhByvu2hBo6KixKZRm9c4y1",
+    "price": "24000000000000000",
+    "priceEth": "0.024",
     "sold": false,
     "buyer": null,
-    "mintTx": "0xfc0b50b2f71f0d9fb3cd35b6df30b4c083f6d059c895d7770178a6260c12b90e",
+    "mintTx": "0x25beeb41d324fb144bf2f66f82cf441057d3915693d048ea2e8dacd2aa1b0972",
     "paletteId": "GOLDEN_HOUR",
     "paletteLabel": "Golden Hour",
     "paletteName": "Golden Hour",
     "palette": [
-      "rgb(248,205,94)",
-      "rgb(227,72,5)",
-      "rgb(91,34,173)",
-      "rgb(23,21,18)",
-      "rgb(238,237,232)"
+      "rgb(247,199,76)",
+      "rgb(239,153,37)",
+      "rgb(105,23,179)",
+      "rgb(25,22,18)",
+      "rgb(238,237,231)"
     ],
-    "seed": "0x98C475E6",
+    "seed": "0x36FBEF9F",
     "stats": {
       "commits": 0,
       "errors": 0,
@@ -888,10 +892,47 @@
       "events": 0,
       "txns": 0,
       "posts": 0,
-      "peakHour": 16,
+      "peakHour": 15,
       "glitchIndex": 0,
-      "mcap": 90272,
-      "change24h": -1.07
+      "mcap": 96210,
+      "change24h": 0.65
+    }
+  },
+  {
+    "tokenId": 23,
+    "dayNumber": 23,
+    "date": "2026-03-23",
+    "agent": "clawdia",
+    "title": "Corrupt Memory",
+    "ipfsImage": "https://gateway.pinata.cloud/ipfs/QmTFBREuCf26iQPVkJiMRsaesFZRFFjp213tJnjWr5ctqH",
+    "ipfsMetadata": "ipfs://QmXAZxDs4ryPXaK4xngfrYAyhByvu2hBo6KixKZRm9c4y1",
+    "price": "24000000000000000",
+    "priceEth": "0.024",
+    "sold": false,
+    "buyer": null,
+    "mintTx": "0x25beeb41d324fb144bf2f66f82cf441057d3915693d048ea2e8dacd2aa1b0972",
+    "paletteId": "GOLDEN_HOUR",
+    "paletteLabel": "Golden Hour",
+    "paletteName": "Golden Hour",
+    "palette": [
+      "rgb(247,199,76)",
+      "rgb(239,153,37)",
+      "rgb(105,23,179)",
+      "rgb(25,22,18)",
+      "rgb(238,237,231)"
+    ],
+    "seed": "0x36FBEF9F",
+    "stats": {
+      "commits": 0,
+      "errors": 0,
+      "messages": 0,
+      "events": 0,
+      "txns": 0,
+      "posts": 0,
+      "peakHour": 15,
+      "glitchIndex": 0,
+      "mcap": 96210,
+      "change24h": 0.65
     }
   }
 ]
