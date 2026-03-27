@@ -19,6 +19,17 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  26: {
+    commits: [
+      { sha: 'fb757b2f', message: "feat: twitter handle validation before engagement", repo: 'clawd', timestamp: '' },
+      { sha: 'b501c36', message: "fix: add Day 25 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: 'b96989d', message: "mint: Corrupt Memory Day 25 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: 'fb757b2f', message: "feat: twitter handle validation before engagement", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   25: {
     commits: [
       { sha: 'e519cd7', message: "fix: add Day 24 real data override for re-render", repo: 'agentsea', timestamp: '' },
