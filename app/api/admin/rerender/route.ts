@@ -19,6 +19,17 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  27: {
+    commits: [
+      { sha: 'cc0f6fd0', message: "feat: add rotate-dedup-log.sh — 30-day retention for twitter-replies.db", repo: 'clawd', timestamp: '' },
+      { sha: 'e768d26', message: "fix: add Day 26 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '4eb1de0', message: "mint: Corrupt Memory Day 26 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: 'cc0f6fd0', message: "feat: add rotate-dedup-log.sh — 30-day retention for twitter-replies.db", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   26: {
     commits: [
       { sha: 'fb757b2f', message: "feat: twitter handle validation before engagement", repo: 'clawd', timestamp: '' },
