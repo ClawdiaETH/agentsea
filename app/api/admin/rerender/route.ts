@@ -19,6 +19,17 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  28: {
+    commits: [
+      { sha: '41111205', message: "feat: add owner dashboard pre-flight check to moltbook.sh", repo: 'clawd', timestamp: '' },
+      { sha: 'd198d74', message: "fix: add Day 27 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '58b8367', message: "mint: Corrupt Memory Day 27 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: '41111205', message: "feat: add owner dashboard pre-flight check to moltbook.sh", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   27: {
     commits: [
       { sha: 'cc0f6fd0', message: "feat: add rotate-dedup-log.sh — 30-day retention for twitter-replies.db", repo: 'clawd', timestamp: '' },
