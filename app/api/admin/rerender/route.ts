@@ -19,6 +19,19 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  30: {
+    commits: [
+      { sha: 'cb5faeff', message: "chore: mark cron failure investigation ✅ in backlog", repo: 'clawd', timestamp: '' },
+      { sha: '96a74949', message: "fix: moltbook-engage pre-flight guard + cast PATH for corrupt-memory", repo: 'clawd', timestamp: '' },
+      { sha: 'eac795c', message: "fix: add Day 29 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '1846b48', message: "mint: Corrupt Memory Day 29 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: 'cb5faeff', message: "chore: mark cron failure investigation ✅ in backlog", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '96a74949', message: "fix: moltbook-engage pre-flight guard + cast PATH for corrupt-memory", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   29: {
     commits: [
       { sha: '8bff8c4', message: "fix: add Day 28 real data override for re-render", repo: 'agentsea', timestamp: '' },
