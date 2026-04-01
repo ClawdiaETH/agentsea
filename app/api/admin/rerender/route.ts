@@ -19,6 +19,17 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  31: {
+    commits: [
+      { sha: '6e4a4a70', message: "feat: add incremental mentions scanning to x-read.mjs", repo: 'clawd', timestamp: '' },
+      { sha: '82d3c27', message: "fix: add Day 30 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: 'ba1897d', message: "mint: Corrupt Memory Day 30 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: '6e4a4a70', message: "feat: add incremental mentions scanning to x-read.mjs", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   30: {
     commits: [
       { sha: 'cb5faeff', message: "chore: mark cron failure investigation ✅ in backlog", repo: 'clawd', timestamp: '' },
