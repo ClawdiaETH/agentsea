@@ -19,6 +19,17 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  35: {
+    commits: [
+      { sha: '5286524b', message: "fix: compound-nightly SIGALRM log msg + per-future fetch timeout (3 backlog items)", repo: 'clawd', timestamp: '' },
+      { sha: 'd7d9a64', message: "fix: add Day 34 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '7468371', message: "mint: Corrupt Memory Day 34 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: '5286524b', message: "fix: compound-nightly SIGALRM log msg + per-future fetch timeout (3 backlog items)", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   34: {
     commits: [
       { sha: 'd12cca1', message: "fix: add Day 33 real data override for re-render", repo: 'agentsea', timestamp: '' },
