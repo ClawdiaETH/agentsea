@@ -19,6 +19,19 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  40: {
+    commits: [
+      { sha: 'f915b6e8', message: "chore: update backlog with git hygiene completion note + [NEXT] submodule task", repo: 'clawd', timestamp: '' },
+      { sha: '47a8d8a5', message: "chore: git hygiene — ignore ephemeral files, commit accumulated changes (2026-03-15 → 2026-04-08)", repo: 'clawd', timestamp: '' },
+      { sha: '111f008', message: "fix: add Day 39 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: 'a684ddc', message: "mint: Corrupt Memory Day 39 — Golden Hour", repo: 'agentsea', timestamp: '' },
+      { sha: 'f915b6e8', message: "chore: update backlog with git hygiene completion note + [NEXT] submodule task", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '47a8d8a5', message: "chore: git hygiene — ignore ephemeral files, commit accumulated changes (2026-03-15 → 2026-04-08)", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   39: {
     commits: [
       { sha: 'a01eecc', message: "fix: add Day 38 real data override for re-render", repo: 'agentsea', timestamp: '' },
