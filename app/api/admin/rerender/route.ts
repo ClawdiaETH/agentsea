@@ -19,6 +19,27 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  57: {
+    commits: [
+      { sha: 'c865c68d', message: "chore(backlog): update mission-control task — fix committed, needs vercel deploy", repo: 'clawd', timestamp: '' },
+      { sha: '07b044da', message: "chore: bump wallet-to-social submodule (10012bd)", repo: 'clawd', timestamp: '' },
+      { sha: 'bbc89be1', message: "chore: commit accumulated memory, reports, and task files (Apr-2026)", repo: 'clawd', timestamp: '' },
+      { sha: '320e9b13', message: "fix(mission-control): graceful degradation for activity-log API", repo: 'clawd', timestamp: '' },
+      { sha: '56ffc560', message: "feat: ship scripts batch Apr 14-25", repo: 'clawd', timestamp: '' },
+      { sha: 'c9047a23', message: "chore: gitignore XMTP agent runtime WAL/SHM files", repo: 'clawd', timestamp: '' },
+      { sha: '1c2c3b6', message: "fix: add Day 56 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '10a2c21', message: "mint: Corrupt Memory Day 56 — Golden Hour", repo: 'agentsea', timestamp: '' },
+      { sha: 'c865c68d', message: "chore(backlog): update mission-control task — fix committed, needs vercel deploy", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '07b044da', message: "chore: bump wallet-to-social submodule (10012bd)", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: 'bbc89be1', message: "chore: commit accumulated memory, reports, and task files (Apr-2026)", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '320e9b13', message: "fix(mission-control): graceful degradation for activity-log API", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '56ffc560', message: "feat: ship scripts batch Apr 14-25", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: 'c9047a23', message: "chore: gitignore XMTP agent runtime WAL/SHM files", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   56: {
     commits: [
       { sha: 'c4fc93a', message: "fix: add Day 55 real data override for re-render", repo: 'agentsea', timestamp: '' },
