@@ -19,6 +19,19 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  60: {
+    commits: [
+      { sha: '84f721a7', message: "fix: openagent-keepalive — pre-flight secret check with daily sentinel", repo: 'clawd', timestamp: '' },
+      { sha: '429331b1', message: "compound: daily review 2026-04-28", repo: 'clawd', timestamp: '' },
+      { sha: '1195f11', message: "fix: add Day 59 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '16b391b', message: "mint: Corrupt Memory Day 59 — Meridian", repo: 'agentsea', timestamp: '' },
+      { sha: '84f721a7', message: "fix: openagent-keepalive — pre-flight secret check with daily sentinel", repo: 'clawdia-glitch', timestamp: '' },
+      { sha: '429331b1', message: "compound: daily review 2026-04-28", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   59: {
     commits: [
       { sha: '1f23ba83', message: "compound: daily review 2026-04-27", repo: 'clawd', timestamp: '' },
