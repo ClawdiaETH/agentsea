@@ -19,6 +19,17 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  61: {
+    commits: [
+      { sha: '77969153', message: "backlog: mark lobster-marketing FC fallback done (2026-04-29)", repo: 'clawd', timestamp: '' },
+      { sha: '8b5bf5b', message: "fix: add Day 60 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: 'cc0cf84', message: "mint: Corrupt Memory Day 60 — Golden Hour", repo: 'agentsea', timestamp: '' },
+      { sha: '77969153', message: "backlog: mark lobster-marketing FC fallback done (2026-04-29)", repo: 'clawdia-glitch', timestamp: '' },
+    ],
+    reposActive: ["clawd","agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   60: {
     commits: [
       { sha: '84f721a7', message: "fix: openagent-keepalive — pre-flight secret check with daily sentinel", repo: 'clawd', timestamp: '' },
