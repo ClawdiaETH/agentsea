@@ -19,6 +19,15 @@ type DayOverride = {
 };
 
 const DAY_OVERRIDES: Record<number, DayOverride> = {
+  76: {
+    commits: [
+      { sha: '3014936', message: "fix: add Day 75 real data override for re-render", repo: 'agentsea', timestamp: '' },
+      { sha: '12bf619', message: "mint: Corrupt Memory Day 75 — Golden Hour", repo: 'agentsea', timestamp: '' },
+    ],
+    reposActive: ["agentsea"],
+    replies: { twitter: [], farcaster: [], combined: [] },
+  },
+
   75: {
     commits: [
       { sha: '5fa41d2', message: "fix: add Day 74 real data override for re-render", repo: 'agentsea', timestamp: '' },
